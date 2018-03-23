@@ -76,7 +76,7 @@ source = Source.from_file('filename.fits')
 # view the contents.
 source.info()
 
-# plot an image or spectrum.
+# plot an image.
 source.images['MUSE_WHITE'].plot(title='MUSE WHITE')
 ```
 
