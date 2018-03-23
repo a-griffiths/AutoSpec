@@ -12,7 +12,7 @@ Before you start make sure you have the following pieces of software installed:
 
 ```
 Python 3
-[Source Extractor](https://www.astromatic.net/software/sextractor)
+Source Extractor (https://www.astromatic.net/software/sextractor)
 ```
 
 You will also need the following python pacakges:
@@ -20,7 +20,7 @@ You will also need the following python pacakges:
 ```
 numpy
 matplotlib
-[mpdaf](http://mpdaf.readthedocs.io/en/latest/) (and it's dependencies) 
+mpdaf (http://mpdaf.readthedocs.io/en/latest/)
 ```
 
 ### Installing
@@ -39,10 +39,10 @@ ID      RA      DEC
 (int)   (deg)   (deg)
 ```
 
+
 **__The Parameter File__**
 Then you just need to edit the parameter file to your liking. Everything is explained in the comments of the file but I shall expand on the not so obvious ones here.
 
-```
 **SIZE:** this is the size of the subcube and postage stamp images the software will create (in arcseconds), make sure this is atleast as big as your largest source in the data. Note that this size is the full size of the image/cube (i.e. 5 will produce a 5x5 arcsecond cut out centred on the RA and DEC from the catalog). 
 
 **XCOR:** this parameter tells the code if it should perform the extra cross-correlation step of not. This produces a higher S/N final spectra but adds on a little more time for each object. 
@@ -58,10 +58,31 @@ Then you just need to edit the parameter file to your liking. Everything is expl
 **ORIG_XXX:*** are related to the MPDAF pacakge ([see here](http://mpdaf.readthedocs.io/en/latest/api/mpdaf.sdetect.Source.html#mpdaf.sdetect.Source.from_data)), I thought some users might find this useful.
 
 **WARNINGS:** when developing the code I was using a datacube that had some extra headers in that astropy didn't like. As a result I got a lot of warnings which dominated the output so I couldn't see what was happening with the code, added this parameter in incase any users had the same issue. 
+
+
+**__SExtractor File__**
+SExtractor will use the default.nnw, default.param, default.sex and .conv files present in the current directory. If not present default parameter files are created. 
+
+
+**__Running the Code__**
+My advice would be to try this on a single object first, make sure it works how you want by outputting the plots and/or all of the images etc (defined in OUT_XXX parameters explained above). The more supplimentary images you supply the better the results will be. You should also check that the SEctractor file (default.sex) is set up correctly for your data, a simple check would be to look at the ID_IMAGES.jpg output and see how well its defining the segmentation maps. If you haven't used SExtractor before there is much too much to explain here but the [for dummies manual](http://mensa.ast.uct.ac.za/~holwerda/SE/Manual.html) would be a good place to start. Once you have it working change the CATALOG parameter to your full catalog and away you go. While testing you might also want to consider the extraction times with the added continuum subtraction and cross-correlation vs the imporvement in the spectra. I find that these steps provide much higher S/N at work very well at deblending the sources (this is what I designed the code for in the first place). If you have low redshift well defined objects without much neighbouring contamination you should be able to get away without these steps. Another alternative is to run without first and have a look at the outputs, then re-run the code on a sub-catalog with only the objects that require imporvement. 
+
+
+**__Loading the Output__**
+The output files are created and saved via the MPDAF framework ([here](http://mpdaf.readthedocs.io/en/latest/source.html)) in fits format. You should be able to open these however you normally open fits files but I will explain some basic commands for python here (see the mpdaf page for more):
+
 ```
+from mpdaf.sdetect import Source
 
+# load the file.
+source = Source.from_file('filename.fits')
 
-My advice would be to try this on a single object first.
+# view the contents.
+source.info()
+
+# plot an image or spectrum.
+source.images['MUSE_WHITE'].plot(title='MUSE WHITE')
+```
 
 
 ## Running the tests
