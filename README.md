@@ -123,7 +123,7 @@ Heres a list of functionality that I'd like to add in the future.
 
 ## Authors
 
-* **Alex Griffiths** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Alex Griffiths**
 
 ## License
 
