@@ -25,12 +25,22 @@ You will also need the following python pacakges:
 
 ## Installing
 
-Installation is pretty simple, just copy download the AutoSpec.py and params.py files and save them wherever you want.
+Installation is pretty simple, just copy download the AutoSpec.py files and save them wherever you want.
 
 ## Usage
 
-I've tried to make this as simple as possible but I'd suggest having a quick read through this section before you try it for yourself....
+I've tried to make this as simple as possible but I'd suggest having a quick read through this section before you try it for yourself.
 
+First off, create a folder containting; the datacube, any additional images, your catalog, parameter file (default version can be downloaded here) and sextractor files. 
+
+Edit the parameter file (as described bellow), then in the terminal you run the software by simply cd-ing into your data folder and running the code:
+```
+cd /working/directory
+python /installed/directory/Autospec.py
+```
+Obviously replace "/working/directory" and "/installed/directory/" with the directories in which the test data is stored and the AutoSpec.py file is saved respectively.
+
+Note: All output subdirectories will be automatically created, so you don't need to worry about making those.
 
 ### The Catalog
 The first thing you need to do is create a catalog file (simple text or csv file, not fits). An example is supplied in the test data folder and should be in the following format:
@@ -82,23 +92,19 @@ source.images['MUSE_WHITE'].plot(title='MUSE WHITE')
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
+Download the test folder from this github page to somewhere on your computer. Also download the main code AutoSpec.py to somewhere you'll remember. You can run the code as is by opening a terminal and typing: 
 ```
-Give an example
+cd /data/directory/test
+python /installed/directory/Autospec.py
 ```
+Obviously replace "/data/directory/test" and "/installed/directory/" with the directories in which the test data is stored and the AutoSpec.py file is saved respectively.
 
-### And coding style tests
+I tried to choose test data in which there were a range of objects at various redshifts. A few of the objects aren't picked up by the default sextractor files I have included, this presents an obvious issue with the software at its current state.
 
-Explain what these tests test and why
+## Current Issues
 
-```
-Give an example
-```
+- Only one SExtractor file for every source and image. This is due to the way the MPDAF module works, I may be able to find a work around for this in the future but for now you will need to run the code on seperate catalogs if you want to use multiple Sextractor settings. As for the different images, it is best to just try and find a good comprimise. 
+- Currently a lot of parameters are set for every object, such as extraction size and continuum subtraction, in future releases I will impliment a way to set these on a object to object basis, maybe using additional columns in the catalog. 
 
 ## Further Improvements
 
