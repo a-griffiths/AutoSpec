@@ -117,7 +117,7 @@ Heres a list of functionality that I'd like to add in the future.
 
 ## Versions
 
-**1.0.0: March 23, 2018** 
+**v.1.0.0:** March 23, 2018 
 
 * Functioning code for testing purposes.
 
