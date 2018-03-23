@@ -92,7 +92,9 @@ source.images['MUSE_WHITE'].plot(title='MUSE WHITE')
 
 ## Running the tests
 
-Download the test folder from this github page to somewhere on your computer. Also download the main code AutoSpec.py to somewhere you'll remember. You can run the code as is by opening a terminal and typing: 
+Download the test folder from this github page to somewhere on your computer. Also download the main code AutoSpec.py to somewhere you'll remember. Additionally, you will need to download the datacube and put it in the test folder, the datacube can be downloaded from [here](https://drive.google.com/open?id=1FewIkG2yHgGlBq1kWE1sHtUu7_DRPbDC) (can't upload to github due to filesize).
+
+You can run the code as is by opening a terminal and typing: 
 ```
 cd /data/directory/test
 python /installed/directory/Autospec.py
