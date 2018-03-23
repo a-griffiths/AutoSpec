@@ -6,7 +6,7 @@ This software aims to provide fast, automated extraction of high quality 1D spec
 
 Currently the code has only been tested on a linux system but it should work as long as the prerequisites are met.
 
-### Prerequisites
+## Prerequisites
 
 Before you start make sure you have the following pieces of software installed:
 
@@ -23,24 +23,23 @@ matplotlib
 mpdaf (http://mpdaf.readthedocs.io/en/latest/)
 ```
 
-### Installing
+## Installing
 
 Installation is pretty simple, just copy download the AutoSpec.py and params.py files and save them wherever you want.
 
-### Usage
+## Usage
 
 I've tried to make this as simple as possible but I'd suggest having a quick read through this section before you try it for yourself....
 
 
-**__The Catalog__**
+### The Catalog
 The first thing you need to do is create a catalog file (simple text or csv file, not fits). An example is supplied in the test data folder and should be in the following format:
 ```
 ID      RA      DEC
 (int)   (deg)   (deg)
 ```
 
-
-**__The Parameter File__**
+### The Parameter File
 Then you just need to edit the parameter file to your liking. Everything is explained in the comments of the file but I shall expand on the not so obvious ones here.
 
 **SIZE:** this is the size of the subcube and postage stamp images the software will create (in arcseconds), make sure this is atleast as big as your largest source in the data. Note that this size is the full size of the image/cube (i.e. 5 will produce a 5x5 arcsecond cut out centred on the RA and DEC from the catalog). 
@@ -59,16 +58,13 @@ Then you just need to edit the parameter file to your liking. Everything is expl
 
 **WARNINGS:** when developing the code I was using a datacube that had some extra headers in that astropy didn't like. As a result I got a lot of warnings which dominated the output so I couldn't see what was happening with the code, added this parameter in incase any users had the same issue. 
 
-
-**__SExtractor File__**
+### SExtractor File
 SExtractor will use the default.nnw, default.param, default.sex and .conv files present in the current directory. If not present default parameter files are created. 
 
-
-**__Running the Code__**
+### Running the Code
 My advice would be to try this on a single object first, make sure it works how you want by outputting the plots and/or all of the images etc (defined in OUT_XXX parameters explained above). The more supplimentary images you supply the better the results will be. You should also check that the SEctractor file (default.sex) is set up correctly for your data, a simple check would be to look at the ID_IMAGES.jpg output and see how well its defining the segmentation maps. If you haven't used SExtractor before there is much too much to explain here but the [for dummies manual](http://mensa.ast.uct.ac.za/~holwerda/SE/Manual.html) would be a good place to start. Once you have it working change the CATALOG parameter to your full catalog and away you go. While testing you might also want to consider the extraction times with the added continuum subtraction and cross-correlation vs the imporvement in the spectra. I find that these steps provide much higher S/N at work very well at deblending the sources (this is what I designed the code for in the first place). If you have low redshift well defined objects without much neighbouring contamination you should be able to get away without these steps. Another alternative is to run without first and have a look at the outputs, then re-run the code on a sub-catalog with only the objects that require imporvement. 
 
-
-**__Loading the Output__**
+### Loading the Output
 The output files are created and saved via the MPDAF framework ([here](http://mpdaf.readthedocs.io/en/latest/source.html)) in fits format. You should be able to open these however you normally open fits files but I will explain some basic commands for python here (see the mpdaf page for more):
 
 ```
