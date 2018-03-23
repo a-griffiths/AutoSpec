@@ -104,17 +104,17 @@ Give an example
 
 Heres a list of functionality that I'd like to add in the future.
 
-- [x] Think of a catchy name!
-- [] Make progress bar more persistent.
-- [] Test on other systems (windows/mac)
-- [x] Test/adapt code to work with python 2?
-- [] Create GUI interface.
-- [] Add option to output fits file for MARZ analysis: github.com/Samreay/Marz
-- [x] Integrate MUSELET and/or LSDCat input catalogs.
-- [] Direct redshift estimation.
-- [] Improve speed of continuum subtraction.
-- [] Add more options for the user (maybe on a per object basis).
-- [] Probably a lot of other stuff...
+- [ ] Think of a catchy name!
+- [ ] Make progress bar more persistent.
+- [ ] Test on other systems (windows/mac)
+- [ ] Test/adapt code to work with python 2?
+- [ ] Create GUI interface.
+- [ ] Add option to output fits file for MARZ analysis: github.com/Samreay/Marz
+- [ ] Integrate MUSELET and/or LSDCat input catalogs.
+- [ ] Direct redshift estimation.
+- [ ] Improve speed of continuum subtraction.
+- [ ] Add more options for the user (maybe on a per object basis).
+- [ ] Probably a lot of other stuff...
 
 ## Versions
 
