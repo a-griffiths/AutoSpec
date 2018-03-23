@@ -35,7 +35,7 @@ I've tried to make this as simple as possible but I'd suggest having a quick rea
 ### The Catalog
 The first thing you need to do is create a catalog file (simple text or csv file, not fits). An example is supplied in the test data folder and should be in the following format:
 ```
-ID      RA      DEC
+#ID     RA      DEC
 (int)   (deg)   (deg)
 ```
 
