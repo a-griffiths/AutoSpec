@@ -120,6 +120,7 @@ Heres a list of functionality that I'd like to add in the near future:
 - [ ] Make progress bar more persistent.
 - [ ] Test on other systems (windows/mac)
 - [ ] Test/adapt code to work with python 2?
+- [ ] Test compatibility with other datacubes (not just MUSE).
 - [ ] Quantify to what degree the cross-correlation is better?
 - [ ] Fix automatic MUSE naming for use with different data.
 - [ ] Create output for summary of results (if successful or error encountered etc).
