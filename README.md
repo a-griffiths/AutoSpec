@@ -62,6 +62,8 @@ Then you just need to edit the parameter file to your liking. Everything is expl
 
 **PLOTS:** this parameter lets the user decide if the they want to output plots or not. The software creates up to 4 plots per source; ID_IMAGES.jpg will show a postage stamp of each of the images with the corresponding segmentation map, ID_MASKS.jpg shows the sky and object masks, ID_SPECTRA.jpg shows each of the spectra extracted and finally ID_XCORRELATION.jpg will display the calculated cross-correlation map (file size of the output images is a few hundred kB per source).
 
+**OBJ_MASK:** here we define if you want to use the intersection or the union of the individual segmentation maps to produce an object mask in order to build the initial spectrum. The intersection mask only selects areas where the object overlaps in the combined images, union puts all the areas together. If you choose intersection and SExtractor doesn't find the object in one of the images, the code defaults to using the union mask in order to successfully extract a spectrum. 
+
 **OUT_XXX:** these options let the user decide which objects they want saving in the output source fits file. The average size of the output (with 2 additional images) is ~ 35Mb if you save everything. The default setting is to not save the subcubes, as for most cases I can't imagine them being overly useful, they also contribute to almost all of this file size (with the subcubes turned off the file size is only a feew hundred kB).
 
 **ORIG_XXX:** are related to the MPDAF pacakge ([see here](http://mpdaf.readthedocs.io/en/latest/api/mpdaf.sdetect.Source.html#mpdaf.sdetect.Source.from_data)), I thought some users might find this useful.
@@ -105,11 +107,11 @@ python /installed/directory/Autospec.py
 ```
 Obviously replace "/data/directory/test" and "/installed/directory/" with the directories in which the test data is stored and the AutoSpec.py file is saved respectively.
 
-I tried to choose test data in which there were a range of objects at various redshifts. A few of the objects aren't picked up by the default sextractor files I have included, this presents an obvious issue with the software at its current state.
+I tried to choose test data in which there were a range of objects at various redshifts, some with deblending needed. The improved spectrum from the cross-correlation algorithm can be see by comparing the 'MUSE_CCWEIGHTED_SKYSUB' to 'MUSE_TOT_SKYSUB' spectra in the output images. This is improvement is most obvious in object 207, the galaxy is in close proximity to another at a different redshift (object id:208). Here the continuum subtraction and cross-correlation algorithms implemented within this code successfully isolate the source and subtract a much higher S/N spectrum. 
 
 ## Current Issues
 
-- Only one SExtractor file for every source and image. This is due to the way the MPDAF module works, I may be able to find a work around for this in the future but for now you will need to run the code on seperate catalogs if you want to use multiple Sextractor settings. As for the different images, it is best to just try and find a good comprimise. 
+- Only one SExtractor file for each run (all images and objects). This is due to the way the MPDAF module works, I may be able to find a work around for this in the future but for now you will need to run the code on seperate catalogs if you want to use multiple Sextractor settings. As for the different images, it is best to just try and find a good comprimise. 
 - Currently a lot of parameters are set for every object, such as extraction size and continuum subtraction, in future releases I will impliment a way to set these on a object to object basis, maybe using additional columns in the catalog. 
 
 ## Further Improvements
@@ -120,6 +122,7 @@ Heres a list of functionality that I'd like to add in the near future:
 - [ ] Make progress bar more persistent.
 - [ ] Test on other systems (windows/mac)
 - [X] Test/adapt code to work with python 2?
+- [X] Fix spectra that don't extract due to empty segmentation maps.
 - [ ] Test compatibility with other datacubes (not just MUSE).
 - [ ] Quantify to what degree the cross-correlation is better?
 - [ ] Fix automatic MUSE naming for use with different data.
