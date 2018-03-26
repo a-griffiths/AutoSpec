@@ -55,7 +55,7 @@ def create_source(ID, ra, dec):
     # intersection mask will also be empty, in these cases it is best to
     # default to the union mask.
     for i in seg:
-        if np.sum(s.images[str(i.upper())].data.data) == 0:
+        if np.sum(s.images[str(i)].data.data) == 0:
             mask = 'MASK_UNION'
 
     s.extract_spectra(s.cubes['MUSE'], obj_mask=mask,
