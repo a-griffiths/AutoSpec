@@ -430,7 +430,6 @@ def main():
                 S.write(file_path+'/'+params.PRE_OUT+'%d.fits' % m[0])
                 del S
             except Exception as e:
-
                 print('Error : Source '+str(int(m[0]))+' '+str(e))
                 pass
             # Show current progress.
