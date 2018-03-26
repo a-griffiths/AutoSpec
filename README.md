@@ -20,7 +20,7 @@ You will also need the following python pacakges:
 ```
 - numpy
 - matplotlib
-- mpdaf (http://mpdaf.readthedocs.io/en/latest/)
+- mpdaf (http://mpdaf.readthedocs.io/en/latest/) and its dependencies.
 ```
 
 ## Installing
@@ -38,9 +38,9 @@ Edit the parameter file (as described bellow), then in the terminal you run the 
 cd /working/directory
 python /installed/directory/Autospec.py
 ```
-Obviously replace "/working/directory" and "/installed/directory/" with the directories in which the test data is stored and the AutoSpec.py file is saved respectively.
+Obviously replace "/working/directory" and "/installed/directory/" with the directories in which the test data is stored and the AutoSpec.py file is saved respectively. You could also just copy the AutoSpec file into the working folder and simply run `python Autospec.py`.
 
-Note: All output subdirectories will be automatically created, so you don't need to worry about making those.
+Note: All output subdirectories will be automatically created, so you don't need to worry about making those before hand.
 
 ### The Catalog
 The first thing you need to do is create a catalog file (simple text or csv file, not fits). An example is supplied in the test data folder and should be in the following format:
@@ -71,14 +71,14 @@ Then you just need to edit the parameter file to your liking. Everything is expl
 **WARNINGS:** when developing the code I was using a datacube that had some extra headers in that astropy didn't like. As a result I got a lot of warnings which dominated the output so I couldn't see what was happening with the code, added this parameter in incase any users had the same issue. 
 
 ### SExtractor File
-SExtractor will use the default.nnw, default.param, default.sex and .conv files present in the current directory. If not present default parameter files are created. 
+SExtractor will use the default.nnw, default.param, default.sex and .conv files present in the working directory. If not present, default parameter files are created and used. 
 
 ### Running the Code
-My advice would be to try this on a single object first, make sure it works how you want by outputting the plots and/or all of the images etc (defined in OUT_XXX parameters explained above). The more supplimentary images you supply the better the results are likely to be. You should also check that the SExtractor file (default.sex) is set up correctly for your data, a simple check would be to look at the ID_IMAGES.jpg output and see how well it is defining the segmentation maps. If you haven't used SExtractor before there is much too much to explain here but the [for dummies manual](http://mensa.ast.uct.ac.za/~holwerda/SE/Manual.html) would be a good place to start.
+My advice would be to try this on a single object first, make sure it works how you want by outputting the plots and/or all of the images etc (defined in OUT_XXX parameters explained above). You should also check that the SExtractor file (default.sex) is set up correctly for your data, a simple check would be to look at the ID_IMAGES.jpg output and see how well it is defining the segmentation maps. If you haven't used SExtractor before there is much too much to explain here but the [for dummies manual](http://mensa.ast.uct.ac.za/~holwerda/SE/Manual.html) is a good place to start.
 
 To check if the cross-correlation is doing a good job, you'll want to compare the 'MUSE_TOT_SKYSUB' spectrum (or 'MUSE_TOT' if you don't do the sky subtraction) to the 'MUSE_CCWEIGHTED_SKYSUB' spectrum (again, 'MUSE_CCWEIGHTED' if you didn't sky subtract). The cross-correlation spectrum usually has visibly less noise, and the emission/absorption features tend to be more well defined (I'm yet to figure out a way to quantify by what degree this happens but it's on the to-do list).
 
-Once you have it working, change the CATALOG parameter to your full catalog and away you go. While testing you might also want to consider the extraction times with the added continuum subtraction and cross-correlation vs the imporvement in the spectra. I find that these steps provide much higher S/N and work very well at deblending the sources (this is what I designed the code for in the first place). If you have low redshift, well defined objects without much neighbouring contamination, you should be able to get away without these steps. Another alternative is to run without these steps first and have a look at the outputs, then re-run the code on a sub-catalog with only the objects that require imporvemening. 
+Once you have it working, change the CATALOG parameter to your full catalog and away you go. While testing you might also want to consider the extraction times with the added continuum subtraction and cross-correlation vs the imporvement in the spectra. I find that these steps provide much higher S/N and work very well at deblending the sources (this is what I designed the code for in the first place). If you have low redshift, well defined objects without much neighbouring contamination, you should be able to get away without these steps. Another alternative is to run without these steps first and have a look at the outputs, then re-run the code on a sub-catalog with only the objects that require imporvement. 
 
 ### Loading the Output
 The output files are created and saved via the MPDAF framework ([here](http://mpdaf.readthedocs.io/en/latest/source.html)) in fits format. You should be able to open these however you normally open fits files but I will explain some basic commands for python here (see the mpdaf page for more):
