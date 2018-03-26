@@ -11,7 +11,7 @@ Currently the code has only been tested on a linux system but it should work as 
 Before you start make sure you have the following pieces of software installed:
 
 ```
-- Python 3
+- Python 2.7 or 3.3+
 - Source Extractor (https://www.astromatic.net/software/sextractor)
 ```
 
@@ -119,7 +119,7 @@ Heres a list of functionality that I'd like to add in the near future:
 - [ ] Think of a catchy name!
 - [ ] Make progress bar more persistent.
 - [ ] Test on other systems (windows/mac)
-- [ ] Test/adapt code to work with python 2?
+- [X] Test/adapt code to work with python 2?
 - [ ] Test compatibility with other datacubes (not just MUSE).
 - [ ] Quantify to what degree the cross-correlation is better?
 - [ ] Fix automatic MUSE naming for use with different data.
