@@ -72,7 +72,11 @@ Then you just need to edit the parameter file to your liking. Everything is expl
 SExtractor will use the default.nnw, default.param, default.sex and .conv files present in the current directory. If not present default parameter files are created. 
 
 ### Running the Code
-My advice would be to try this on a single object first, make sure it works how you want by outputting the plots and/or all of the images etc (defined in OUT_XXX parameters explained above). The more supplimentary images you supply the better the results are likely to be. You should also check that the SEctractor file (default.sex) is set up correctly for your data, a simple check would be to look at the ID_IMAGES.jpg output and see how well it is defining the segmentation maps. If you haven't used SExtractor before there is much too much to explain here but the [for dummies manual](http://mensa.ast.uct.ac.za/~holwerda/SE/Manual.html) would be a good place to start. Once you have it working, change the CATALOG parameter to your full catalog and away you go. While testing you might also want to consider the extraction times with the added continuum subtraction and cross-correlation vs the imporvement in the spectra. I find that these steps provide much higher S/N and work very well at deblending the sources (this is what I designed the code for in the first place). If you have low redshift, well defined objects without much neighbouring contamination, you should be able to get away without these steps. Another alternative is to run without these steps first and have a look at the outputs, then re-run the code on a sub-catalog with only the objects that require imporvemening. 
+My advice would be to try this on a single object first, make sure it works how you want by outputting the plots and/or all of the images etc (defined in OUT_XXX parameters explained above). The more supplimentary images you supply the better the results are likely to be. You should also check that the SExtractor file (default.sex) is set up correctly for your data, a simple check would be to look at the ID_IMAGES.jpg output and see how well it is defining the segmentation maps. If you haven't used SExtractor before there is much too much to explain here but the [for dummies manual](http://mensa.ast.uct.ac.za/~holwerda/SE/Manual.html) would be a good place to start.
+
+To check if the cross-correlation is doing a good job, you'll want to compare the 'MUSE_TOT_SKYSUB' spectrum (or 'MUSE_TOT' if you don't do the sky subtraction) to the 'MUSE_CCWEIGHTED_SKYSUB' spectrum (again, 'MUSE_CCWEIGHTED' if you didn't sky subtract). The cross-correlation spectrum usually has visibly less noise, and the emission/absorption features tend to be more well defined (I'm yet to figure out a way to quantify by what degree this happens but it's on the to-do list).
+
+Once you have it working, change the CATALOG parameter to your full catalog and away you go. While testing you might also want to consider the extraction times with the added continuum subtraction and cross-correlation vs the imporvement in the spectra. I find that these steps provide much higher S/N and work very well at deblending the sources (this is what I designed the code for in the first place). If you have low redshift, well defined objects without much neighbouring contamination, you should be able to get away without these steps. Another alternative is to run without these steps first and have a look at the outputs, then re-run the code on a sub-catalog with only the objects that require imporvemening. 
 
 ### Loading the Output
 The output files are created and saved via the MPDAF framework ([here](http://mpdaf.readthedocs.io/en/latest/source.html)) in fits format. You should be able to open these however you normally open fits files but I will explain some basic commands for python here (see the mpdaf page for more):
@@ -110,19 +114,25 @@ I tried to choose test data in which there were a range of objects at various re
 
 ## Further Improvements
 
-Heres a list of functionality that I'd like to add in the future.
+Heres a list of functionality that I'd like to add in the near future:
 
 - [ ] Think of a catchy name!
 - [ ] Make progress bar more persistent.
 - [ ] Test on other systems (windows/mac)
 - [ ] Test/adapt code to work with python 2?
+- [ ] Quantify to what degree the cross-correlation is better?
+- [ ] Fix automatic MUSE naming for use with different data.
+- [ ] Create output for summary of results (if successful or error encountered etc).
+- [ ] Probably a lot of other stuff...
+
+...and some more long term goals:
+
 - [ ] Create GUI interface.
+- [ ] Direct redshift estimation.
 - [ ] Add option to output fits file for MARZ analysis: github.com/Samreay/Marz
 - [ ] Integrate MUSELET and/or LSDCat input catalogs.
-- [ ] Direct redshift estimation.
 - [ ] Improve speed of continuum subtraction.
 - [ ] Add more options for the user (maybe on a per object basis).
-- [ ] Probably a lot of other stuff...
 
 ## Versions
 
