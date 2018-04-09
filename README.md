@@ -45,7 +45,9 @@ You will also need the following python pacakges:
 ## Installing
 
 Installation is pretty simple, just copy download the AutoSpec.py files and save them wherever you want or use git clone:
-```git clone https://github.com/a-griffiths/AutoSpec-Testing.git```
+```
+git clone https://github.com/a-griffiths/AutoSpec-Testing.git
+```
 
 ## Usage
 
