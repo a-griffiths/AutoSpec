@@ -2,7 +2,8 @@
 
 This software aims to provide fast, automated extraction of high quality 1D spectra from astronomical datacubes with minimal effort. Autospec takes an IFU datacube, along with any suplimentary images to extract a 1D spectra for each object in the supplied catalog. A custom designed cross-correlation algorithm helps to improve signal to noise as well as deblend sources from neighbouring contaminants.
 
-**Table of Contents
+## Contents
+
 - [Getting Started](#getting-started)
 - [Prerequisites](#prerequisites)
 - [Installing](#installing)
