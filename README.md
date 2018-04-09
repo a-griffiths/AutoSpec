@@ -140,21 +140,21 @@ I tried to choose test data in which there were a range of objects at various re
 
 Heres a list of functionality that I'd like to add in the near future:
 
-- [ ] Think of a catchy name!
-- [ ] Make progress bar more persistent.
-- [ ] Test on other systems (windows/mac)
 - [X] Test/adapt code to work with python 2?
 - [X] Fix spectra that don't extract due to empty segmentation maps.
 - [X] Let users specify a weight image for intial spectral extraction.
+- [X] Create output for summary of results (if successful or error encountered etc).
+- [ ] Think of a catchy name!
+- [ ] Make progress bar more persistent.
+- [ ] Test on other systems (windows/mac)
 - [ ] Test compatibility with other datacubes (not just MUSE).
+- [ ] Allow user to specify number of cores to use.
 - [ ] Quantify to what degree the cross-correlation is better?
 - [ ] Fix automatic MUSE naming for use with different data.
-- [X] Create output for summary of results (if successful or error encountered etc).
 - [ ] Let user import a segmentation map instead of images.
 - [ ] Probably a lot of other stuff...
 
 ...and some more long term goals:
-
 
 - [ ] Create GUI interface.
 - [ ] Direct redshift estimation.
