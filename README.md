@@ -145,13 +145,16 @@ Heres a list of functionality that I'd like to add in the near future:
 - [ ] Test on other systems (windows/mac)
 - [X] Test/adapt code to work with python 2?
 - [X] Fix spectra that don't extract due to empty segmentation maps.
+- [X] Let users specify a weight image for intial spectral extraction.
 - [ ] Test compatibility with other datacubes (not just MUSE).
 - [ ] Quantify to what degree the cross-correlation is better?
 - [ ] Fix automatic MUSE naming for use with different data.
-- [ ] Create output for summary of results (if successful or error encountered etc).
+- [X] Create output for summary of results (if successful or error encountered etc).
+- [ ] Let user import a segmentation map instead of images.
 - [ ] Probably a lot of other stuff...
 
 ...and some more long term goals:
+
 
 - [ ] Create GUI interface.
 - [ ] Direct redshift estimation.
