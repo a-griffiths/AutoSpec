@@ -115,7 +115,7 @@ The parameter file provides easy user modification to AutoSpec run modes. Each p
 
 **CONT_POLY:** sets the order of the polynomial to fit the continuum, 5 tends to be a good start. 
 
-**PLOTS:** this parameter lets the user decide if the they want to output plots or not. The software creates up to 4 plots per source; ID_IMAGES.jpg will show a postage stamp of each of the images with the corresponding segmentation map and additional segmentation maps provided, ID_MASKS.jpg shows the sky and object masks used for extraction, ID_SPECTRA.jpg shows the reference (top) and final spectra (bottom) extracted. Finally ID_XCORRELATION.jpg will display the calculated cross-correlation map.
+**PLOTS:** this parameter lets the user decide if the they want to output plots or not. The software creates up to 4 plots per source; ID_IMAGES.jpg will show a postage stamp of each of the images with the corresponding segmentation map and additional segmentation maps provided, ID_MASKS.jpg shows the sky and object masks used for extraction, ID_SPECTRA.jpg shows the reference (top) and final spectra (bottom) extracted. Finally ID_XCOR.jpg will display the calculated cross-correlation map.
 
 **OUT_XXX:** these options let the user decide which objects they want saving in the output source fits file. The average size of the output (with 2 additional images) is ~ 35Mb if you save everything. The default setting is to not save the subcubes, as for most cases I can't imagine them being overly useful, they also contribute to almost all of this file size (with the subcubes turned off the file size is only a feew hundred kB).
 
@@ -131,7 +131,7 @@ SExtractor will use the default.nnw, default.param, default.sex and .conv files 
 ### Running the Code
 My advice would be to try this on a single object first, make sure it works how you want by outputting the plots and/or all of the images etc (defined in OUT_XXX parameters explained above). If you are using AutoSpec to produce segmenation maps you should also check that the SExtractor file (default.sex) is set up correctly for your data, a simple check would be to look at the ID_IMAGES.jpg output and see how well it is defining the segmentation maps. If you haven't used SExtractor before there is much too much to explain here but the [for dummies manual](http://mensa.ast.uct.ac.za/~holwerda/SE/Manual.html) is a good place to start.
 
-To check if the cross-correlation is doing a good job, you'll want to compare the reference and final spectra (top and bottom on the ID_SPECTRA.jpg image). The cross-correlation spectrum usually has visibly less noise, and the emission/absorption features tend to be more well defined (I'm yet to figure out a way to quantify by what degree this happens but it's on the to-do list).
+To check if the cross-correlation is doing a good job, you'll want to compare the reference and final spectra (top and bottom on the ID_SPECTRA.jpg image). The cross-correlation spectrum usually has visibly less noise, and the emission/absorption features tend to be more well defined .
 
 You can also check the output file by following the steps details [below](#loading-the-output).
 
