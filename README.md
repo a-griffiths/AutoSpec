@@ -74,10 +74,10 @@ The first thing you need to do is create a catalogue file (simple text or csv fi
 #ID     RA      DEC
 (int)   (deg)   (deg)
 ```
-Alternatively, if you run in catalogue mode (MODE = 'cat' in the parameter file), you will also need to specify MODE and REF values. 'MODE' specifies the extraction mode of the initial reference spectrum and should be either IMG or APER (image or aperture mode). 'REF' specifies which weight image (for IMG mode) or aperture size (APER mode) to use for initial extraction respectively. For aperture mode or when a weight image is not specified, AutoSpec will use WEIGHT_IMG from the parameter file, further, if this is not specified it will default to using the muse white light image. The format of the catalogue in this case should follow the following format:
+Alternatively, if you run in catalogue mode (MODE = 'cat' in the parameter file), you will also need to specify MODE and REF values. 'Size' sets the subcube/image extraction size, this is the per object version of the SIZE parameter in param.py. 'MODE' specifies the extraction mode of the initial reference spectrum and should be either IMG or APER (image or aperture mode). 'REF' specifies which weight image (for IMG mode) or aperture size (APER mode) to use for initial extraction respectively. For aperture mode or when a weight image is not specified, AutoSpec will use WEIGHT_IMG from the parameter file, further, if this is not specified it will default to using the muse white light image. The format of the catalogue in this case should follow the following format:
 ```
-#ID     RA      DEC     MODE     REF
-(int)   (deg)   (deg)   (str)    (str)
+#ID     RA      DEC     SIZE       MODE     REF
+(int)   (deg)   (deg)   (arcsec)   (str)    (str)
 ```
 
 ### The Parameter File
