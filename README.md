@@ -1,6 +1,6 @@
 # AutoSpec
 
-This software aims to provide fast, automated extraction of high quality 1D spectra from astronomical datacubes with minimal user effort. Autospec takes an IFU datacube and a simple parameter file in order to extract a 1D spectra for each object in a supplied catalog. A custom designed cross-correlation algorithm helps to improve signal to noise as well as deblend sources from neighbouring contaminants.
+This software aims to provide fast, automated extraction of high quality 1D spectra from astronomical datacubes with minimal user effort. AutoSpec takes an IFU datacube and a simple parameter file in order to extract a 1D spectra for each object in a supplied catalogue. A custom designed cross-correlation algorithm helps to improve signal to noise as well as deblend sources from neighbouring contaminants.
 
 ## Contents
 
@@ -24,7 +24,7 @@ This software aims to provide fast, automated extraction of high quality 1D spec
 
 ## Getting Started
 
-Currently the code has only been tested on a linux system but it should work as long as the prerequisites are met. Thus, all installation and running instructions are based on linux systems (for now).
+Currently the code has only been tested on a Linux system but it should work as long as the prerequisites are met. Thus, all installation and running instructions are based on Linux systems (for now).
 
 ## Prerequisites
 
@@ -55,7 +55,7 @@ The easiest way to run AutoSpec is to make it it executable. To do this simply n
 
 AutoSpec is designed to be as intuitive as possible, this section will provide a brief run through on the different elements of the software.
 
-First off, create a working folder; this should contain a minimum of the datacube, parameter file and catalogue file. The default parameter file can be found [here](param.py), an example [catalog](test/catalog.txt) file can be found in the test folder on github. You can also include any additional images, segmentation maps and sextractor configuration files. 
+First off, create a working folder; this should contain a minimum of the datacube, parameter file and catalogue file. The default parameter file can be found [here](param.py), an example [catalogue](test/catalog.txt) file can be found in the test folder on github. You can also include any additional images, segmentation maps and sextractor configuration files. 
 
 AutoSpec runs in two main operating modes which can be specified in the parameter file: 'same' mode runs the software with the same parameters for every source in the catalogue. Alternatively the catalogue ('cat') mode will run different parameters for each object based on values specified in the catalogue. For more info on this see [here](#running-the-code). 
 
@@ -69,7 +69,7 @@ _* Note: If you haven't made AutoSpec [executable](#installing) then you will ne
 _** Note: All output subdirectories will be automatically created._
 
 ### The Catalog
-The first thing you need to do is create a catalog file (simple text or csv file, not fits). There are two options for this; if you run the code in constant mode (MODE = 'same' in the parameter file), you only need to supply the ID, RA and DEC for each source:
+The first thing you need to do is create a catalogue file (simple text or csv file, not fits). There are two options for this; if you run the code in constant mode (MODE = 'same' in the parameter file), you only need to supply the ID, RA and DEC for each source:
 ```
 #ID     RA      DEC
 (int)   (deg)   (deg)
@@ -81,7 +81,7 @@ Alternatively, if you run in catalogue mode (MODE = 'cat' in the parameter file)
 ```
 
 ### The Parameter File
-The parameter file provides easy user modification to AutoSpec run modes. Each parameter is briefly explained in the comments of the file, but more in depth explination is provided below.
+The parameter file provides easy user modification to AutoSpec run modes. Each parameter is briefly explained in the comments of the file, but more in depth explanation is provided below.
 
 **MODE:** this is the main operating mode AutoSpec will run in. For constant mode ('same'), AutoSpec will extract each source within the catalogue based only on the settings provided in the parameter file. In catalogue mode ('cat'), the software will take extraction method and reference from the catalogue file on a source by source basis. 
 
@@ -107,7 +107,7 @@ The parameter file provides easy user modification to AutoSpec run modes. Each p
 
 **PRE_OUT:** string to prepend to the output files (will be followed by 'id.fits')
 
-**SIZE:** this is the size of the subcube and postage stamp images the software will create (in arcseconds), make sure this is atleast as big as your largest source in the data. Note that this size is the full size of the image/cube (i.e. 5 will produce a 5x5 arcsecond cut out centred on the RA and DEC from the catalog). 
+**SIZE:** this is the size of the subcube and postage stamp images the software will create (in arcseconds). If in constant mode, make sure this is at least as big as your largest source in the data. If in catalogue mode, this is defined in the catalogue file instead, this parameter however will be used as default if value is missing. Note that this size is the full size of the image/cube (i.e. 5 will produce a 5x5 arcsecond cut out centred on the RA and DEC from the catalog). You should also consider processing time when deciding on this value, a larger size will mean bigger subcubes and images and larger extraction times. 
 
 **XCOR:** this parameter tells the code if it should perform the extra cross-correlation step or not. This produces a higher S/N final spectra but adds on a little more time for each object. 
 
@@ -123,17 +123,17 @@ The parameter file provides easy user modification to AutoSpec run modes. Each p
 
 **ORIG_XXX:** are related to the MPDAF pacakge ([see here](http://mpdaf.readthedocs.io/en/latest/api/mpdaf.sdetect.Source.html#mpdaf.sdetect.Source.from_data)), I thought some users might find this useful.
 
-**WARNINGS:** sometimes your datacube might have some extra headers that astropy doesn't like. MPDAF also outputs a lot of info into the terminal that isn't necessary. Can be turned on to dubug any issue you may be having. 
+**WARNINGS:** sometimes your datacube might have some extra headers that astropy doesn't like. MPDAF also outputs a lot of info into the terminal that isn't necessary. Can be turned on to debug any issue you may be having. 
 
 ### SExtractor File
-SExtractor will use the default.nnw, default.param, default.sex and .conv files present in the working directory. If not present, default parameter files are created and used. It is best to try running SExtractor on the images first to get the settings right. If you are using multiple images where a single sextractor file is not ideal, you can create the segmentation maps using the images outside of AutoSpec and then load them under the SEG_MAP parameter instead.
+SExtractor will use the default.nnw, default.param, default.sex and .conv files present in the working directory. If not present, default parameter files are created and used. It is best to try running SExtractor on the images first to get the settings right. If you are using multiple images where a single SExtractor file is not ideal, you can create the segmentation maps using the images outside of AutoSpec and then load them under the SEG_MAP parameter instead.
 
 ### Running the Code
 My advice would be to try this on a single object first, make sure it works how you want by outputting the plots and/or all of the images etc (defined in OUT_XXX parameters explained above). If you are using AutoSpec to produce segmenation maps you should also check that the SExtractor file (default.sex) is set up correctly for your data, a simple check would be to look at the ID_IMAGES.jpg output and see how well it is defining the segmentation maps. If you haven't used SExtractor before there is much too much to explain here but the [for dummies manual](http://mensa.ast.uct.ac.za/~holwerda/SE/Manual.html) is a good place to start.
 
 To check if the cross-correlation is doing a good job, you'll want to compare the reference and final spectra (top and bottom on the ID_SPECTRA.jpg image). The cross-correlation spectrum usually has visibly less noise, and the emission/absorption features tend to be more well defined (I'm yet to figure out a way to quantify by what degree this happens but it's on the to-do list).
 
-You can also check the output file by following the steps details [below](#loading-the-output)
+You can also check the output file by following the steps details [below](#loading-the-output).
 
 ### Loading the Output
 The output files are created and saved via the MPDAF framework ([here](http://mpdaf.readthedocs.io/en/latest/source.html)) in fits format. You should be able to open these however you normally open fits files but some basic python commands are detailed here (see the [mpdaf page](http://mpdaf.readthedocs.io/en/latest/source.html) for more):
@@ -225,7 +225,10 @@ Will have open source licensing.
 
 ## Acknowledgments
 
-* the MPDAF team at CRAL.
+This creation of this software wouldn't have been be possible without:
+
+* MUSE Python Data Analysis Framework (MPDAF; Bacon et al. 2016)[http://adsabs.harvard.edu/abs/2016ascl.soft11003B]
+* SExtractor (Bertin & Arnouts 1996)[http://adsabs.harvard.edu/abs/1996A%26AS..117..393B]
 
 ## How to Cite
 
