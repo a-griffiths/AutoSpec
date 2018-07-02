@@ -221,15 +221,15 @@ Heres a list of functionality that I'd like to add in the near future:
 
 ## License
 
-Will have open source licensing.
+Licensing information coming soon...
 
 ## Acknowledgments
 
 This creation of this software wouldn't have been be possible without:
 
-* MUSE Python Data Analysis Framework (MPDAF; Bacon et al. 2016)[http://adsabs.harvard.edu/abs/2016ascl.soft11003B]
-* SExtractor (Bertin & Arnouts 1996)[http://adsabs.harvard.edu/abs/1996A%26AS..117..393B]
+* MUSE Python Data Analysis Framework ([MPDAF; Bacon et al. 2016](http://adsabs.harvard.edu/abs/2016ascl.soft11003B))
+* SExtractor ([Bertin & Arnouts 1996](http://adsabs.harvard.edu/abs/1996A%26AS..117..393B))
 
 ## How to Cite
 
-Information coming soon. ..
+Information coming soon...
