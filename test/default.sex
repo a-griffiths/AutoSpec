@@ -13,7 +13,6 @@ PARAMETERS_NAME  default.param  # name of the file containing catalog contents
  
 DETECT_TYPE      CCD            # CCD (linear) or PHOTO (with gamma correction)
 DETECT_MINAREA   3              # min. # of pixels above threshold
-DETECT_MAXAREA   0              # max. # of pixels above threshold (0=unlimited)
 THRESH_TYPE      RELATIVE       # threshold type: RELATIVE (in sigmas)
                                 # or ABSOLUTE (in ADUs)
 DETECT_THRESH    2              # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
@@ -36,7 +35,6 @@ MASK_TYPE        CORRECT        # type of detection MASKing: can be one of
 
 WEIGHT_TYPE      NONE           # type of WEIGHTing: NONE, BACKGROUND,
                                 # MAP_RMS, MAP_VAR or MAP_WEIGHT
-RESCALE_WEIGHTS  Y              # Rescale input weights/variances (Y/N)?
 WEIGHT_IMAGE     weight.fits    # weight-map filename
 WEIGHT_GAIN      Y              # modulate gain (E/ADU) with weights? (Y/N)
 WEIGHT_THRESH                   # weight threshold[s] for bad pixels
@@ -49,7 +47,7 @@ FLAG_TYPE        OR             # flag pixel combination: OR, AND, MIN, MAX
 
 #------------------------------ Photometry -----------------------------------
  
-PHOT_APERTURES   5              # MAG_APER aperture diameter(s) in pixels
+PHOT_APERTURES   5, 10          # MAG_APER aperture diameter(s) in pixels
 PHOT_AUTOPARAMS  1.2, 1.8       # MAG_AUTO parameters: <Kron_fact>,<min_radius>
 PHOT_PETROPARAMS 2.0, 3.5       # MAG_PETRO parameters: <Petrosian_fact>,
                                 # <min_radius>
@@ -102,7 +100,6 @@ MEMORY_BUFSIZE   1024           # number of lines in buffer
 ASSOC_NAME       sky.list       # name of the ASCII file to ASSOCiate
 ASSOC_DATA       2,3,4          # columns of the data to replicate (0=all)
 ASSOC_PARAMS     2,3,4          # columns of xpos,ypos[,mag]
-ASSOCCOORD_TYPE  PIXEL          # ASSOC coordinates: PIXEL or WORLD
 ASSOC_RADIUS     2.0            # cross-matching radius (pixels)
 ASSOC_TYPE       NEAREST        # ASSOCiation method: FIRST, NEAREST, MEAN,
                                 # MAG_MEAN, SUM, MAG_SUM, MIN or MAX
@@ -110,8 +107,7 @@ ASSOCSELEC_TYPE  MATCHED        # ASSOC selection type: ALL, MATCHED or -MATCHED
 
 #----------------------------- Miscellaneous ---------------------------------
  
-VERBOSE_TYPE     NORMAL         # can be QUIET, NORMAL or FULL
-HEADER_SUFFIX    .head          # Filename extension for additional headers
+VERBOSE_TYPE     QUIET          # can be QUIET, NORMAL or FULL
 WRITE_XML        N              # Write XML file (Y/N)?
 XML_NAME         sex.xml        # Filename for XML output
 XSL_URL          file:///opt/local/share/sextractor/sextractor.xsl
