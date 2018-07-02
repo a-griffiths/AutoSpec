@@ -183,7 +183,7 @@ Heres a list of functionality that I'd like to add in the near future:
 - [ ] Make progress bar more persistent.
 - [ ] Test on other systems (windows/mac)
 - [ ] Test compatibility with other datacubes (not just MUSE).
-~~- [ ] Allow user to specify number of cores to use.~~ (Now uses faster numpy method instead of multiprocessing)
+- [X] ~~Allow user to specify number of cores to use.~~ (Now uses faster numpy method instead of multiprocessing)
 - [ ] Quantify to what degree the cross-correlation spectrum is better (in regards to S/N)?
 - [ ] Fix automatic MUSE naming for use with different data.
 - [X] Let user import a segmentation map instead of images.
@@ -218,6 +218,10 @@ Heres a list of functionality that I'd like to add in the near future:
 ## Authors
 
 * **Alex Griffiths**
+  - alex.griffiths@nottingham.ac.uk
+  - [LinkedIn](https://www.linkedin.com/in/alex-griffiths/)
+  - [ORCID](https://orcid.org/0000-0003-1880-3509)
+  - [Google Scholar](https://scholar.google.co.uk/citations?user=dDnyc94AAAAJ&hl=en)
 
 ## License
 
