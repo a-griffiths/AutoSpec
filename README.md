@@ -1,6 +1,6 @@
-# AutoSpec (Need to come up with a catchy name)
+# AutoSpec
 
-This software aims to provide fast, automated extraction of high quality 1D spectra from astronomical datacubes with minimal effort. Autospec takes an IFU datacube, along with any suplimentary images to extract a 1D spectra for each object in the supplied catalog. A custom designed cross-correlation algorithm helps to improve signal to noise as well as deblend sources from neighbouring contaminants.
+This software aims to provide fast, automated extraction of high quality 1D spectra from astronomical datacubes with minimal user effort. Autospec takes an IFU datacube and a simple parameter file in order to extract a 1D spectra for each object in a supplied catalog. A custom designed cross-correlation algorithm helps to improve signal to noise as well as deblend sources from neighbouring contaminants.
 
 ## Contents
 
@@ -23,7 +23,7 @@ This software aims to provide fast, automated extraction of high quality 1D spec
 
 ## Getting Started
 
-Currently the code has only been tested on a linux system but it should work as long as the prerequisites are met.
+Currently the code has only been tested on a linux system but it should work as long as the prerequisites are met. Thus, all installation and running instructions are based on linux systems (for now).
 
 ## Prerequisites
 
@@ -44,25 +44,25 @@ You will also need the following python pacakges:
 
 ## Installing
 
-Installation is pretty simple, just download the AutoSpec.py and param.py files and save them wherever you want, or use git clone:
+AutoSpec doesn't need to be installed, just clone or download the github repository. With git clone use:
 ```
-git clone https://github.com/a-griffiths/AutoSpec-Testing.git
+git clone https://github.com/a-griffiths/AutoSpec.git
 ```
+The easiest way to run AutoSpec is to make it it executable. To do this simply navigate to the AutoSpec directory and run `chmod +x AutoSpec`. You also need to add the line `export PATH=$PATH:/installed_directory/AutoSpec/` to your .bashrc file.
 
 ## Usage
 
-I've tried to make this as simple as possible but I'd suggest having a quick read through this section before you try it for yourself.
+AutoSpec is designed to be as intuitive as possible, this section will provide a brief run through on the different elements of the software.
 
-First off, create a folder containting; the datacube, any additional images, your catalog, parameter file (default version can be downloaded here) and sextractor files. 
+First off, create a working folder; this should contain a minimum of the datacube, parameter file and catalogue file. The default parameter file can be found [here](param.py), an example [catalog](test/catalog.txt) file can be found in the test folder on github. You can also include any additional images, segmentation maps and sextractor configuration files. 
 
-Edit the parameter file (as described bellow), then in the terminal you run the software by simply cd-ing into your data folder and running the code:
+Edit the parameter file with a text editor, making sure to keep the formatting correct ([as detailed below](#the-parameter-file)). The code can then be run through the command line by simple navigating to your working directory and running:
 ```
-cd /working/directory
-python /installed/directory/Autospec.py
+AutoSpec
 ```
-Obviously replace "/working/directory" and "/installed/directory/" with the directories in which the test data is stored and the AutoSpec.py file is saved respectively. You could also just copy the AutoSpec file into the working folder and simply run `python Autospec.py`.
+_# Note: If you haven't made AutoSpec [bootable](#installing) then you will need to run AutoSpec directly from the software directory `/installed_directory/AutoSpec`_
 
-Note: All output subdirectories will be automatically created, so you don't need to worry about making those before hand.
+_## Note: All output subdirectories will be automatically created._
 
 ### The Catalog
 The first thing you need to do is create a catalog file (simple text or csv file, not fits). An example is supplied in the test data folder and should be in the following format:
