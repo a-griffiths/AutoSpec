@@ -218,10 +218,10 @@ Heres a list of functionality that I'd like to add in the near future:
 ## Authors
 
 * **Alex Griffiths**
-- alex.griffiths@nottingham.ac.uk
-- [LinkedIn](https://www.linkedin.com/in/alex-griffiths/)
-- [ORCID](https://orcid.org/0000-0003-1880-3509)
-- [Google Scholar](https://scholar.google.co.uk/citations?user=dDnyc94AAAAJ&hl=en)
+ - alex.griffiths@nottingham.ac.uk
+ - [LinkedIn](https://www.linkedin.com/in/alex-griffiths/)
+ - [ORCID](https://orcid.org/0000-0003-1880-3509)
+ - [Google Scholar](https://scholar.google.co.uk/citations?user=dDnyc94AAAAJ&hl=en)
 
 ## License
 
