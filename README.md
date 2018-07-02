@@ -48,7 +48,7 @@ AutoSpec doesn't need to be installed, just clone or download the github reposit
 ```
 git clone https://github.com/a-griffiths/AutoSpec.git
 ```
-The easiest way to run AutoSpec is to make it it executable. To do this simply navigate to the AutoSpec directory and run `chmod +x AutoSpec`. You also need to add the line `export PATH=$PATH:/installed_directory/AutoSpec/` to your .bashrc file.
+The easiest way to run AutoSpec is to make it it executable. To do this simply navigate to the AutoSpec directory and run `chmod +x AutoSpec`. You also need to add the line `export PATH=$PATH:/installed_dir/AutoSpec/` to your .bashrc file.
 
 ## Usage
 
@@ -56,23 +56,32 @@ AutoSpec is designed to be as intuitive as possible, this section will provide a
 
 First off, create a working folder; this should contain a minimum of the datacube, parameter file and catalogue file. The default parameter file can be found [here](param.py), an example [catalog](test/catalog.txt) file can be found in the test folder on github. You can also include any additional images, segmentation maps and sextractor configuration files. 
 
+AutoSpec runs in two main operating modes which can be specified in the parameter file: 'same' mode runs the software with the same parameters for every source in the catalogue. Alternatively the catalogue ('cat') mode will run different parameters for each object based on values specified in the catalogue. For more info on this see [here](#running-the-code). 
+
 Edit the parameter file with a text editor, making sure to keep the formatting correct ([as detailed below](#the-parameter-file)). The code can then be run through the command line by simple navigating to your working directory and running:
 ```
 AutoSpec
 ```
-_# Note: If you haven't made AutoSpec [bootable](#installing) then you will need to run AutoSpec directly from the software directory `/installed_directory/AutoSpec`_
+_* Note: If you haven't made AutoSpec [bootable](#installing) then you will need to run AutoSpec directly from the software directory `/installed_dir/AutoSpec`_
 
-_## Note: All output subdirectories will be automatically created._
+_** Note: All output subdirectories will be automatically created._
 
 ### The Catalog
-The first thing you need to do is create a catalog file (simple text or csv file, not fits). An example is supplied in the test data folder and should be in the following format:
+The first thing you need to do is create a catalog file (simple text or csv file, not fits). There are two options for this; if you run the code in constant mode (MODE = 'same' in the parameter file), you only need to supply the ID, RA and DEC for each source:
 ```
 #ID     RA      DEC
 (int)   (deg)   (deg)
 ```
+Alternatively, if you run in catalogue mode (MODE = 'cat' in the parameter file), you will also need to specify MODE and REF values. 'MODE' specifies the extraction mode of the initial reference spectrum and should be either IMG or APER (image or aperture mode). 'REF' specifies which weight image (for IMG mode) or aperture size (APER mode) to use for initial extraction respectively. For aperture mode or when a weight image is not specified, AutoSpec will use WEIGHT_IMG from the parameter file, further, if this is not specified it will default to using the muse white light image. The format of the catalogue in this case should follow the following format:
+```
+#ID     RA      DEC     MODE     REF
+(int)   (deg)   (deg)   (str)    (str)
+```
 
 ### The Parameter File
-Then you just need to edit the parameter file to your liking. Everything is explained in the comments of the file but I shall expand on the not so obvious ones here.
+The parameter file provides easy user modification to AutoSpec run modes. Each parameter is briefly explained in the comments of the file, but more in depth explination is provided below.
+
+**MODE:** 
 
 **SIZE:** this is the size of the subcube and postage stamp images the software will create (in arcseconds), make sure this is atleast as big as your largest source in the data. Note that this size is the full size of the image/cube (i.e. 5 will produce a 5x5 arcsecond cut out centred on the RA and DEC from the catalog). 
 
