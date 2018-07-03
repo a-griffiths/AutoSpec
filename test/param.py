@@ -3,7 +3,7 @@
 
 # ----------- Operating Mode ------------------------------------------------------------------------------------------------------------------
 
-MODE           = 'cat'                        # 'same' or 'cat' to use configuration or catalogue file respectively for object extraction mode. 
+MODE           = 'cat'                        # 'same' or 'cat' to use configuration or catalogue file respectively for object extraction mode (string). 
 
 # ----------- Reference Spectra ---------------------------------------------------------------------------------------------------------------
 
@@ -20,16 +20,16 @@ APER           = [1.0, 1.5, 2.0, 2.5]          # aperture sizes (in arcseconds) 
 
 # ----------- Images ---------------------------------------------------------------------------------------------------------------------------
 
-IMG            = ['g-band.fits','r-band.fits'] # name of additional image files (comma seperated list of strings), '' if none.
-IMG_NAME       = ['G-Band','R-Band']           # additional image names for output, no spaces (comma seperated list of strings), '' if none.
-WEIGHT_IMG     = 'G-Band'                      # image to weight spectrum by (must exist in IMG_NAME), defaults to MUSE_WHITE if not specified.
+IMG            = ['g-band.fits','r-band.fits'] # name of additional image files (string or comma seperated list of strings), '' if none.
+IMG_NAME       = ['G-Band','R-Band']           # additional image names for output, no spaces (string or comma seperated list of strings), '' if none.
+WEIGHT_IMG     = 'G-Band'                      # image to weight spectrum by (must exist in IMG_NAME), defaults to MUSE_WHITE if not specified (string).
 
 # ----------- Segmentation Maps ---------------------------------------------------------------------------------------------------------------
 
 USE_WHITE      =  True                         # if AutoSpec should also use the MUSE_WHITE segmentation map to create masks (True or False).
-OBJ_MASK       = 'INTER'                       # object mask from union (UNION) or intersection (INTER) of segmentation maps.
-SEG_MAP        = ['g-seg.fits','r-seg.fits']   # name of segmentation maps files (comma seperated list of strings).
-SEG_NAME       = ['G','R']                     # segmentation map names for output, no spaces (comma seperated list of strings).
+OBJ_MASK       = 'INTER'                       # object mask from union (UNION) or intersection (INTER) of segmentation maps (string).
+SEG_MAP        = ['g-seg.fits','r-seg.fits']   # name of segmentation maps files (string or comma seperated list of strings).
+SEG_NAME       = ['G','R']                     # segmentation map names for output, no spaces (string or comma seperated list of strings).
 
 # ----------- Output Formatting ---------------------------------------------------------------------------------------------------------------
 
@@ -56,7 +56,7 @@ OUT_SPEC       = True                          # output additional spectra (True
 
 # ----------- MISCELLANEOUS -------------------------------------------------------------------------------------------------------------------
 
-CMAP           = 'cubehelix'                   # colour map to use for image plots
+CMAP           = 'cubehelix'                   # colour map to use for image plots.
 ORIG_FROM      = ''                            # name of the detector software which creates this object (string).
 ORIG_FROMV     = ''                            # version of the detector software which creates this object (string).
 ORIG_CUBE      = ''                            # name of the FITS data cube from which this object has been extracted (string).
