@@ -55,9 +55,11 @@ The easiest way to run AutoSpec is to make it it executable. To do this simply n
 
 AutoSpec is designed to be as intuitive as possible, this section will provide a brief run through on the different elements of the software.
 
-First off, create a working folder; this should contain a minimum of the datacube, parameter file and catalogue file. The default parameter file can be found [here](param.py), and an example [catalogue](test/catalog.txt) file can be found in the test folder on github. You can also include any additional images, segmentation maps and SExtractor configuration files. 
+First off, create a working folder; this should contain a minimum of the **datacube**, **parameter file** and **catalogue file**. The default parameter file can be found [here](param.py), and an example [catalogue](test/catalog.txt) file can be found in the test folder on github. You can also include any **additional images**, **segmentation maps** and **SExtractor configuration files**. 
 
-AutoSpec runs in two main operating modes which can be specified in the parameter file: 'same' mode runs the software with the same parameters (defined in the param file) for every source in the catalogue. Alternatively the catalogue ('cat') mode will run different parameters for each object based on values specified in the catalogue. For more info on this see the [catalogue](#the-catalogue) section. 
+AutoSpec runs in two main operating modes which can be specified in the parameter file: 
+- 'same' mode: runs the software with a constant set of parameters (defined in the param file) for every source in the catalogue. 
+- 'cat' (catalogue) mode: runs AutoSpec with different parameters for each object based on values specified in the catalogue file. For more info on this see the [catalogue](#the-catalogue) section. 
 
 Edit the parameter file with a text editor, making sure to keep the formatting correct ([as detailed below](#the-parameter-file)). The code can then be run through the command line by simple navigating to your working directory and running:
 ```
