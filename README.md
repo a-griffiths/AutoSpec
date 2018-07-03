@@ -1,6 +1,6 @@
 # AutoSpec
 
-This software aims to provide fast, automated extraction of high quality 1D spectra from astronomical datacubes with minimal user effort. AutoSpec takes an IFU datacube and a simple parameter file in order to extract a 1D spectra for each object in a supplied catalogue. A custom designed cross-correlation algorithm helps to improve signal to noise as well as deblend sources from neighbouring contaminants.
+This software aims to provide fast, automated extraction of high quality 1D spectra from astronomical datacubes with minimal user effort. AutoSpec takes an IFU datacube and a simple parameter file in order to extract a 1D spectra for each object in a supplied catalogue. A custom designed cross-correlation algorithm helps to improve signal to noise as well as isolate sources from neighbouring contaminants.
 
 ## Contents
 
@@ -8,7 +8,7 @@ This software aims to provide fast, automated extraction of high quality 1D spec
 - [Prerequisites](#prerequisites)
 - [Installing](#installing)
 - [Usage](#usage)
-  - [The Catalog](#the-catalog)
+  - [The Catalogue](#the-catalogue)
   - [The Parameter File](#the-parameter-file)
   - [SExtractor File](#sextractor-file)
   - [Running the Code](#running-the-code)
@@ -19,12 +19,12 @@ This software aims to provide fast, automated extraction of high quality 1D spec
 - [Versions](#versions)
 - [Authors](#authors)
 - [License](#license)
-- [Acknowledgments](#acknowledgments)
+- [Acknowledgements](#acknowledgements)
 - [How to Cite](#how-to-cite)
 
 ## Getting Started
 
-Currently the code has only been tested on a Linux system but it should work as long as the prerequisites are met. Thus, all installation and running instructions are based on Linux systems (for now).
+Currently the code has only been tested on a Linux system but it should work as long as the prerequisites are met. Because of this all installation and running instructions are based on Linux systems (for now).
 
 ## Prerequisites
 
@@ -45,7 +45,7 @@ You will also need the following python pacakges:
 
 ## Installing
 
-AutoSpec doesn't need to be installed, just clone or download the github repository. With git clone use:
+AutoSpec doesn't need to be installed, just clone or download this github repository. With git clone use:
 ```
 git clone https://github.com/a-griffiths/AutoSpec.git
 ```
@@ -55,33 +55,34 @@ The easiest way to run AutoSpec is to make it it executable. To do this simply n
 
 AutoSpec is designed to be as intuitive as possible, this section will provide a brief run through on the different elements of the software.
 
-First off, create a working folder; this should contain a minimum of the datacube, parameter file and catalogue file. The default parameter file can be found [here](param.py), an example [catalogue](test/catalog.txt) file can be found in the test folder on github. You can also include any additional images, segmentation maps and sextractor configuration files. 
+First off, create a working folder; this should contain a minimum of the datacube, parameter file and catalogue file. The default parameter file can be found [here](param.py), and an example [catalogue](test/catalog.txt) file can be found in the test folder on github. You can also include any additional images, segmentation maps and SExtractor configuration files. 
 
-AutoSpec runs in two main operating modes which can be specified in the parameter file: 'same' mode runs the software with the same parameters for every source in the catalogue. Alternatively the catalogue ('cat') mode will run different parameters for each object based on values specified in the catalogue. For more info on this see [here](#running-the-code). 
+AutoSpec runs in two main operating modes which can be specified in the parameter file: 'same' mode runs the software with the same parameters (defined in the param file) for every source in the catalogue. Alternatively the catalogue ('cat') mode will run different parameters for each object based on values specified in the catalogue. For more info on this see the [catalogue](#the-catalogue) section. 
 
 Edit the parameter file with a text editor, making sure to keep the formatting correct ([as detailed below](#the-parameter-file)). The code can then be run through the command line by simple navigating to your working directory and running:
 ```
 AutoSpec
 ```
 _* Note: If you haven't made AutoSpec [executable](#installing) then you will need to run AutoSpec directly from the software directory_ 
-```/installed_dir/AutoSpec```
-
+```
+/installed_dir/AutoSpec
+```
 _** Note: All output subdirectories will be automatically created._
 
-### The Catalog
+### The Catalogue
 The first thing you need to do is create a catalogue file (simple text or csv file, not fits). There are two options for this; if you run the code in constant mode (MODE = 'same' in the parameter file), you only need to supply the ID, RA and DEC for each source:
 ```
 #ID     RA      DEC
 (int)   (deg)   (deg)
 ```
-Alternatively, if you run in catalogue mode (MODE = 'cat' in the parameter file), you will also need to specify MODE and REF values. 'Size' sets the subcube/image extraction size, this is the per object version of the SIZE parameter in param.py. 'MODE' specifies the extraction mode of the initial reference spectrum and should be either IMG or APER (image or aperture mode). 'REF' specifies which weight image (for IMG mode) or aperture size (APER mode) to use for initial extraction respectively. For aperture mode or when a weight image is not specified, AutoSpec will use WEIGHT_IMG from the parameter file, further, if this is not specified it will default to using the muse white light image. The format of the catalogue in this case should follow the following format:
+Alternatively, if you run in catalogue mode (MODE = 'cat' in the parameter file), you will also need to specify SIZE, MODE and REF values for each source. 'Size' sets the subcube/image extraction size, this is the per object version of the [SIZE](#the-parameter-file) parameter in param.py. 'MODE' specifies the extraction mode of the initial reference spectrum and should be either IMG or APER (image or aperture mode). 'REF' specifies which weight image (for IMG mode) or aperture size (APER mode) to use for initial extraction respectively. For aperture mode or when a weight image is not specified, AutoSpec will use WEIGHT_IMG from the parameter file, further, if this is not specified it will default to using the muse white light image. The format of the catalogue in this case should follow the following format:
 ```
 #ID     RA      DEC     SIZE       MODE     REF
 (int)   (deg)   (deg)   (arcsec)   (str)    (str)
 ```
 
 ### The Parameter File
-The parameter file provides easy user modification to AutoSpec run modes. Each parameter is briefly explained in the comments of the file, but more in depth explanation is provided below.
+The parameter file provides easy user modification to AutoSpec run modes. Each parameter is briefly explained in the comments of the file, but more in depth explanation is provided below. The incorrect specification of parameters in this file is the most likely place you can go wrong. This is a python based file so make sure to follow python conventions, it might be best to edit the [example](param.py) parameter file provided. Where multiple values can be provided (APER, IMG, IMG_NAME, SEG_MAP and SEG_NAME), make sure you surround the values with square brackets and separate with a comma, i.e. ['one',two'...] or for the APER parameter [1.0,1.5,2.0....].  
 
 **MODE:** this is the main operating mode AutoSpec will run in. For constant mode ('same'), AutoSpec will extract each source within the catalogue based only on the settings provided in the parameter file. In catalogue mode ('cat'), the software will take extraction method and reference from the catalogue file on a source by source basis. 
 
@@ -101,7 +102,7 @@ The parameter file provides easy user modification to AutoSpec run modes. Each p
 
 **SEG_MAP:** similar to IMG but contains a list of additional segmentation map files.
 
-**SEG_NAME:** output names for each additional image segmenataion map specified by IMG parameter.
+**SEG_NAME:** output names for each additional image segmentation map specified by IMG parameter.
 
 **OUTPUT:** name of the output directory.
 
@@ -126,18 +127,17 @@ The parameter file provides easy user modification to AutoSpec run modes. Each p
 **WARNINGS:** sometimes your datacube might have some extra headers that astropy doesn't like. MPDAF also outputs a lot of info into the terminal that isn't necessary. Can be turned on to debug any issue you may be having. 
 
 ### SExtractor File
-SExtractor will use the default.nnw, default.param, default.sex and .conv files present in the working directory. If not present, default parameter files are created and used. It is best to try running SExtractor on the images first to get the settings right. If you are using multiple images where a single SExtractor file is not ideal, you can create the segmentation maps using the images outside of AutoSpec and then load them under the SEG_MAP parameter instead.
+SExtractor will use the default.nnw, default.param, default.sex and .conv files present in the working directory. If not present, default parameter files are created and used. It is best to try running SExtractor on the images first to get the settings right. If you are using multiple images where a single SExtractor file is not ideal, you can create the segmentation maps using your input images outside of AutoSpec and load them under the SEG_MAP parameter instead.
 
 ### Running the Code
-My advice would be to try this on a single object first, make sure it works how you want by outputting the plots and/or all of the images etc (defined in OUT_XXX parameters explained above). If you are using AutoSpec to produce segmenation maps you should also check that the SExtractor file (default.sex) is set up correctly for your data, a simple check would be to look at the ID_IMAGES.jpg output and see how well it is defining the segmentation maps. If you haven't used SExtractor before there is much too much to explain here but the [for dummies manual](http://mensa.ast.uct.ac.za/~holwerda/SE/Manual.html) is a good place to start.
+My advice would be to try this on a single object first, make sure it works how you want by outputting the plots and/or all of the images etc (defined in OUT_XXX parameters explained above). If you are using AutoSpec to produce segmentation maps you should also check that the SExtractor file (default.sex) is set up correctly for your data, a simple check would be to look at the ID_IMAGES.jpg output and see how well it is defining the segmentation maps. If you haven't used SExtractor before there is much too much to explain here but the [for dummies manual](http://mensa.ast.uct.ac.za/~holwerda/SE/Manual.html) is a good place to start.
 
-To check if the cross-correlation is doing a good job, you'll want to compare the reference and final spectra (top and bottom on the ID_SPECTRA.jpg image). The cross-correlation spectrum usually has visibly less noise, and the emission/absorption features tend to be more well defined .
+To check if the cross-correlation is doing a good job, you'll want to compare the reference and final spectra (top and bottom on the ID_SPECTRA.jpg image). The cross-correlation spectrum usually has visibly better signal to noise, and the emission/absorption features tend to be more well defined .
 
 You can also check the output file by following the steps details [below](#loading-the-output).
 
 ### Loading the Output
 The output files are created and saved via the MPDAF framework ([here](http://mpdaf.readthedocs.io/en/latest/source.html)) in fits format. You should be able to open these however you normally open fits files but some basic python commands are detailed here (see the [mpdaf page](http://mpdaf.readthedocs.io/en/latest/source.html) for more):
-
 ```
 from mpdaf.sdetect import Source
 
@@ -167,9 +167,11 @@ More information can be found in the [usage section](#usage).
 
 I tried to choose test data in which there were a range of objects at various redshifts, some of which need deblending from a neighbouring source (look at objects ID:207 and 208). The improved spectrum from AutoSpec's cross-correlation method can be seen by comparing the top and bottom spectra in the output image ID_SPECTRA.jpg.
 
+For more test data you could use the [HUDF data](http://muse-vlt.eu/science/hdfs-v1-0/) in which MUSE datacubes and object catalogues are publicly available. 
+
 ## Current Issues
 
-- Only one SExtractor file for each run (over all images). This is due to the way the MPDAF module works. To avoid this issue, run SExtractor manually and import the segmentation maps via the SEG_MAP parameter instead of defining the timages in the IMG parameter.
+- Only one SExtractor file for each run (over all images). This is due to the way the MPDAF module works. To avoid this issue, run SExtractor manually and import the segmentation maps via the SEG_MAP parameter instead of defining the images in the IMG parameter.
 
 ## Further Improvements
 
@@ -188,15 +190,15 @@ Heres a list of functionality that I'd like to add in the near future:
 - [ ] Fix automatic MUSE naming for use with different data.
 - [X] Let user import a segmentation map instead of images.
 - [ ] Add more useful information to output logs.
-- [ ] Let user specify wavelength ranges to extract images around emission lines. 
+- [ ] Let user specify wavelength ranges to extract narrow band images around emission lines. 
 - [ ] Implement an itterative process to perform cross-correlation mapping. 
 
 ...and some more long term goals:
 
 - [ ] Create GUI interface.
-- [ ] Direct redshift estimation.
-- [ ] Add option to output fits file for [MARZ](github.com/Samreay/Marz) analysis.
-- [ ] Integrate MUSELET and/or LSDCat input catalogs.
+- [ ] Direct redshift estimation?
+- [ ] Add option to output fits file for [MARZ](github.com/Samreay/Marz) redshift analysis.
+- [ ] Integrate the input of MUSELET and/or LSDCat input catalogues.
 - [X] Improve speed of continuum subtraction.
 - [X] Adapt code to work on a per object basis.
 
@@ -223,7 +225,7 @@ Heres a list of functionality that I'd like to add in the near future:
 
 Licensing information coming soon...
 
-## Acknowledgments
+## Acknowledgements
 
 This creation of this software wouldn't have been be possible without:
 
