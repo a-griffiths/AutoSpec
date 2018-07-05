@@ -206,11 +206,11 @@ Heres a list of functionality that I'd like to add in the near future:
 
 ## Versions
 
-**v.1.0.0:** March 23, 2018 
+**Testing:** March 23, 2018 
 
 * Functioning code for testing purposes.
 
-**v.1.1.0:** July 2, 2018 
+**v.1.0.0:** July 2, 2018 
 
 * Increased the speed of continuum subtraction routine (now ~8x faster).
 * Adapted code to work on python 2.
