@@ -16,11 +16,11 @@ This software aims to provide fast, automated extraction of high quality 1D spec
 - [Running the tests](#running-the-tests)
 - [Current Issues](#current-issues)
 - [Further Improvements](#further-improvements)
-- [Changelog](#changelog)
 - [Authors](#authors)
-- [Acknowledgements](#acknowledgements)
 - [How to Cite](#how-to-cite)
+- [Acknowledgements](#acknowledgements)
 - [License](#license)
+- [Changelog](#changelog)
 
 ## Getting Started
 
@@ -204,6 +204,27 @@ Heres a list of functionality that I'd like to add in the near future:
 - [X] Improve speed of continuum subtraction.
 - [X] Adapt code to work on a per object basis.
 
+## Authors
+
+* **Alex Griffiths** [[Email](mailto:alex.griffiths@nottingham.ac.uk), [LinkedIn](https://www.linkedin.com/in/alex-griffiths/), [ORCID](https://orcid.org/0000-0003-1880-3509), [Google Scholar](https://scholar.google.co.uk/citations?user=dDnyc94AAAAJ&hl=en)]
+
+## How to Cite
+
+Information coming soon...
+
+## Acknowledgements
+
+This creation of this software wouldn't have been be possible without:
+
+* MUSE Python Data Analysis Framework ([MPDAF; Bacon et al. 2016](http://adsabs.harvard.edu/abs/2016ascl.soft11003B))
+* SExtractor ([Bertin & Arnouts 1996](http://adsabs.harvard.edu/abs/1996A%26AS..117..393B))
+
+## License
+
+Copyright (c) 2018, Alex Griffiths
+
+AutoSpec is licenced under a [BSD 3-Clause License](LICENSE.md)
+
 ## Changelog
 
 **v.1.0.0:** July 2, 2018 
@@ -218,23 +239,3 @@ Heres a list of functionality that I'd like to add in the near future:
 **Testing:** March 23, 2018 
 
 * Functioning code for testing purposes.
-
-## Authors
-
-* **Alex Griffiths** [[Email](mailto:alex.griffiths@nottingham.ac.uk), [LinkedIn](https://www.linkedin.com/in/alex-griffiths/), [ORCID](https://orcid.org/0000-0003-1880-3509), [Google Scholar](https://scholar.google.co.uk/citations?user=dDnyc94AAAAJ&hl=en)]
-
-## Acknowledgements
-
-This creation of this software wouldn't have been be possible without:
-
-* MUSE Python Data Analysis Framework ([MPDAF; Bacon et al. 2016](http://adsabs.harvard.edu/abs/2016ascl.soft11003B))
-* SExtractor ([Bertin & Arnouts 1996](http://adsabs.harvard.edu/abs/1996A%26AS..117..393B))
-
-## How to Cite
-
-Information coming soon...
-
-## License
-
-Copyright (c) 2018, Alex Griffiths
-AutoSpec is licenced under a [BSD 3-Clause License](LICENSE.md)
