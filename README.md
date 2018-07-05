@@ -18,9 +18,9 @@ This software aims to provide fast, automated extraction of high quality 1D spec
 - [Further Improvements](#further-improvements)
 - [Versions](#versions)
 - [Authors](#authors)
-- [License](#license)
 - [Acknowledgements](#acknowledgements)
 - [How to Cite](#how-to-cite)
+- [License](#license)
 
 ## Getting Started
 
@@ -223,10 +223,6 @@ Heres a list of functionality that I'd like to add in the near future:
 
 * **Alex Griffiths** [[Email](mailto:alex.griffiths@nottingham.ac.uk), [LinkedIn](https://www.linkedin.com/in/alex-griffiths/), [ORCID](https://orcid.org/0000-0003-1880-3509), [Google Scholar](https://scholar.google.co.uk/citations?user=dDnyc94AAAAJ&hl=en)]
 
-## License
-
-Licensing information coming soon...
-
 ## Acknowledgements
 
 This creation of this software wouldn't have been be possible without:
@@ -237,3 +233,35 @@ This creation of this software wouldn't have been be possible without:
 ## How to Cite
 
 Information coming soon...
+
+## License
+
+[BSD 3-Clause License](LICENSE)
+
+Copyright (c) 2018, Alex Griffiths
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the copyright holder nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
