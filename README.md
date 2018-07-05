@@ -16,7 +16,7 @@ This software aims to provide fast, automated extraction of high quality 1D spec
 - [Running the tests](#running-the-tests)
 - [Current Issues](#current-issues)
 - [Further Improvements](#further-improvements)
-- [Versions](#versions)
+- [Changelog](#changelog)
 - [Authors](#authors)
 - [Acknowledgements](#acknowledgements)
 - [How to Cite](#how-to-cite)
@@ -204,11 +204,7 @@ Heres a list of functionality that I'd like to add in the near future:
 - [X] Improve speed of continuum subtraction.
 - [X] Adapt code to work on a per object basis.
 
-## Versions
-
-**Testing:** March 23, 2018 
-
-* Functioning code for testing purposes.
+## Changelog
 
 **v.1.0.0:** July 2, 2018 
 
@@ -218,6 +214,10 @@ Heres a list of functionality that I'd like to add in the near future:
 * Can extract spectra from a list of user defined apertures.
 * User can now import additional segmentation maps.
 * User can specify extraction methods on a per object basis.
+
+**Testing:** March 23, 2018 
+
+* Functioning code for testing purposes.
 
 ## Authors
 
@@ -236,32 +236,5 @@ Information coming soon...
 
 ## License
 
-[BSD 3-Clause License](LICENSE.md)
-
 Copyright (c) 2018, Alex Griffiths
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-* Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution.
-
-* Neither the name of the copyright holder nor the names of its
-  contributors may be used to endorse or promote products derived from
-  this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+AutoSpec is licenced under a [BSD 3-Clause License](LICENSE.md)
