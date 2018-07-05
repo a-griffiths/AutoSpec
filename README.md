@@ -1,5 +1,5 @@
 # AutoSpec
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1305849.svg)](https://doi.org/10.5281/zenodo.1305849)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1305848.svg)](https://doi.org/10.5281/zenodo.1305848)
 
 This software aims to provide fast, automated extraction of high quality 1D spectra from astronomical datacubes with minimal user effort. AutoSpec takes an IFU datacube and a simple parameter file in order to extract a 1D spectra for each object in a supplied catalogue. A custom designed cross-correlation algorithm helps to improve signal to noise as well as isolate sources from neighbouring contaminants.
 
