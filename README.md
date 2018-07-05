@@ -227,7 +227,7 @@ AutoSpec is licenced under a [BSD 3-Clause License](LICENSE.md)
 
 ## Changelog
 
-**v.1.0.0:** July 2, 2018 
+**v.1.0.0:** July 5, 2018 
 
 * Increased the speed of continuum subtraction routine (now ~8x faster).
 * Adapted code to work on python 2.
