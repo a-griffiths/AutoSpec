@@ -236,7 +236,7 @@ Information coming soon...
 
 ## License
 
-[BSD 3-Clause License](LICENSE)
+[BSD 3-Clause License](LICENSE.md)
 
 Copyright (c) 2018, Alex Griffiths
 All rights reserved.
