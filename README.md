@@ -41,6 +41,7 @@ You will also need the following python pacakges:
 ```
 - numpy
 - matplotlib
+- seaborn
 - mpdaf (http://mpdaf.readthedocs.io/en/latest/) and its dependencies.
 ```
 
