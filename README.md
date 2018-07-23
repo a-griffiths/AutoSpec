@@ -236,6 +236,8 @@ AutoSpec is licenced under a [BSD 3-Clause License](LICENSE.md)
 **v.1.0.1:** July 23, 2018 
 
 * Added DATA_EXT parameter for user to specify data and/or variance datacube extensions.
+* Cleaned up some code.
+* Added citation information to README
 
 **v.1.0.0:** July 5, 2018 
 
