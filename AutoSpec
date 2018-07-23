@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """
 Datacube Spectrum Extractor
 @author: Alex Griffiths
@@ -23,7 +24,7 @@ sns.set_style("ticks")   # white, dark, whitegrid, darkgrid, ticks
 sns.set_context("paper")  # paper, notebook, talk, poster
 
 SOFTWARE = 'AutoSpec'
-VERSION = 'v.1.0.0'
+VERSION = 'v.1.0.1'
 AUTHOR = 'Alex Griffiths'
 
 
@@ -78,7 +79,7 @@ def create_source(ID, ra, dec, size='', mode='', ref=''):
             weight_img = ref.upper()
 
     # This creates the source object (see MPDAF for more details).
-    s = Source.from_data(ID=ID, ra=ra, dec=dec,
+    s = Source.from_data(ID=int(ID), ra=ra, dec=dec,
                          origin=(params.ORIG_FROM, params.ORIG_FROMV,
                                  params.ORIG_CUBE, params.ORIGN_CUBEV),
                          extras=extra)
@@ -116,7 +117,7 @@ def create_source(ID, ra, dec, size='', mode='', ref=''):
 
         del temp
 
-    # select weight image, default to muse white if not in suuplied images
+    # select weight image, default to muse white if not in suplied images
     if weight_img in list(imgs.keys()):
         subcub = s.cubes['MUSE']
         wcsref = subcub.wcs
@@ -141,6 +142,12 @@ def create_source(ID, ra, dec, size='', mode='', ref=''):
                       sky_mask='MASK_SKY', skysub=params.SKY_SUB,
                       tags_to_try=weight_img, apertures=params.APER)
 
+    # Set up naming convention based on if the user has sky-subtraction set.
+    if params.SKY_SUB is True:
+        ssfx = '_SKYSUB'
+    else:
+        ssfx = ''
+
     # No need to subtract continuum if we're not going to cross-correlate.
     if params.XCOR is True:
         csfx = '_CONTSUB'
@@ -148,13 +155,7 @@ def create_source(ID, ra, dec, size='', mode='', ref=''):
         # Continuum subtraction method depends on whether the user has
         # sky-subtraction or not, this part takes the longest but is neccessary
         # to achieve good results if there is contamination in the frame.
-        if params.SKY_SUB is True:
-            ssfx = '_SKYSUB'
-        else:
-            ssfx = ''
-
-        s.spectra[refspec+ssfx+csfx] = \
-            s.spectra[refspec+ssfx] - \
+        s.spectra[refspec+ssfx+csfx] = s.spectra[refspec+ssfx] - \
             s.spectra[refspec+ssfx].poly_spec(params.CONT_POLY)
         s.add_cube(continuum_subtraction(s, params.CONT_POLY), 'MUSE'+csfx)
 
@@ -162,7 +163,7 @@ def create_source(ID, ra, dec, size='', mode='', ref=''):
         csfx = ''
 
     # Finally we cross correlate to get the final spectrum.
-    s = cross_correlate(s, refspec, csfx, ssfx)
+    s = cross_correlate(s, refspec, csfx, ssfx, mask)
 
     # If user wants them, plots are created and output here.
     if params.PLOTS is True:
@@ -184,29 +185,41 @@ def create_source(ID, ra, dec, size='', mode='', ref=''):
             s.images['MUSE_WHITE'].plot(title='MUSE_WHITE', cmap=params.CMAP)
         else:
             # Plot images and save file.
-            r = int(2+np.ceil(len(smaps)/(len(imgs)+1)))
-            c = len(imgs)+1
-            rm = int(np.ceil(len(smaps) /
-                             (len(imgs)+1))*(len(imgs)+1)-len(smaps))
-            plt.subplots(r, c, figsize=(3*c, 3*r), sharex=True, sharey=True)
-            for i, key in enumerate(imgs):
-                plt.subplot(r, c, i+1)
-                s.images[key].plot(title=key, cmap=params.CMAP)
-                plt.subplot(r, c, len(imgs)+i+2)
-                s.images['SEG_'+str(key)].plot(title='SEG_'+str(key),
-                                               cmap=params.CMAP)
-            plt.subplot(r, c, len(imgs)+1)
-            s.images['MUSE_WHITE'].plot(title='MUSE_WHITE', cmap=params.CMAP)
-            plt.subplot(r, c, 2*len(imgs)+2)
-            s.images['SEG_MUSE_WHITE'].plot(title='SEG_MUSE_WHITE',
+            if len(imgs) != 0:
+                r = int(2+np.ceil(len(smaps)/(len(imgs)+1)))
+                c = len(imgs)+1
+                rm = int(np.ceil(len(smaps) /
+                                 (len(imgs)+1))*(len(imgs)+1)-len(smaps))
+                plt.subplots(r, c, figsize=(3*c, 3*r), sharex=True,
+                             sharey=True)
+                for i, key in enumerate(imgs):
+                    plt.subplot(r, c, i+1)
+                    s.images[key].plot(title=key, cmap=params.CMAP)
+                    plt.subplot(r, c, len(imgs)+i+2)
+                    s.images['SEG_'+str(key)].plot(title='SEG_'+str(key),
+                                                   cmap=params.CMAP)
+                plt.subplot(r, c, len(imgs)+1)
+                s.images['MUSE_WHITE'].plot(title='MUSE_WHITE',
                                             cmap=params.CMAP)
-            for i, key in enumerate(smaps):
-                plt.subplot(r, c, 3*len(imgs)+i+1)
-                s.images['SEG_'+str(key)].plot(title='SEG_'+key,
-                                               cmap=params.CMAP)
-            for i in range(0, rm):
-                plt.subplot(r, c, (r*c)-i)
-                plt.axis('off')
+                plt.subplot(r, c, 2*len(imgs)+2)
+                s.images['SEG_MUSE_WHITE'].plot(title='SEG_MUSE_WHITE',
+                                                cmap=params.CMAP)
+                for i, key in enumerate(smaps):
+                    plt.subplot(r, c, 3*len(imgs)+i+1)
+                    s.images['SEG_'+str(key)].plot(title='SEG_'+key,
+                                                   cmap=params.CMAP)
+                for i in range(0, rm):
+                    plt.subplot(r, c, (r*c)-i)
+                    plt.axis('off')
+            else:
+                plt.subplots(1, len(smaps)+1, figsize=(3*(len(smaps)+1), 3))
+                for i, key in enumerate(smaps):
+                    plt.subplot(1, len(smaps)+1, i+1)
+                    s.images['SEG_'+str(key)].plot(title='SEG_'+key,
+                                                   cmap=params.CMAP)
+                plt.subplot(1, len(smaps)+1, len(smaps)+1)
+                s.images['SEG_MUSE_WHITE'].plot(title='SEG_MUSE_WHITE',
+                                                cmap=params.CMAP)
         plt.tight_layout(h_pad=1, w_pad=1)
         plt.savefig(t_path+'/%d_IMAGES.jpg' % ID)
 
@@ -222,19 +235,21 @@ def create_source(ID, ra, dec, size='', mode='', ref=''):
         plt.savefig(t_path+'/%d_MASKS.jpg' % ID)
 
         # Plot spectra and save file.
-        f, ax = plt.subplots(2, 1, figsize=(10, 5), sharex=True)
-        plt.subplot(2, 1, 1)
+        plt.subplots(3, 1, figsize=(10, 7.5), sharex=True)
+        plt.subplot(3, 1, 1)
         s.spectra[refspec+ssfx].plot(title=refspec+ssfx)
         plt.xticks([])
         plt.xlabel('')
         plt.ylabel('')
-        plt.subplot(2, 1, 2)
+        plt.subplot(3, 1, 2)
+        s.spectra['MUSE_CCWEIGHTED_MASKED' +
+                  ssfx].plot(title='MUSE_CCWEIGHTED_MASKED'+ssfx)
+        plt.xticks([])
+        plt.xlabel('')
+        plt.subplot(3, 1, 3)
         s.spectra['MUSE_CCWEIGHTED'+ssfx].plot(title='MUSE_CCWEIGHTED'+ssfx)
         plt.ylabel('')
-        ylabel = s.spectra[refspec+ssfx+csfx].unit
         plt.tight_layout()
-        f.subplots_adjust(left=0.08)
-        f.text(0.01, 0.5, ylabel, va='center', rotation='vertical')
         plt.savefig(t_path+'/%d_SPECTRA.jpg' % ID)
 
         # Plot and save cross correlation.
@@ -336,7 +351,7 @@ def continuum_subtraction(src, poly):
     return csub
 
 
-def cross_correlate(src, refspec, csfx, ssfx):
+def cross_correlate(src, refspec, csfx, ssfx, mask):
     """Create cross-correlation image against reference spectrum
 
     Parameters
@@ -349,10 +364,13 @@ def cross_correlate(src, refspec, csfx, ssfx):
         Continuum subtraction suffix string
     ssfx : Str
         Sky subtraction suffix string
+    mask : Str
+        Object mask used for initial spectrum extraction
 
     """
     ref = refspec+ssfx+csfx
     cubeName = 'MUSE'+csfx
+    refImg = src.images['MUSE_WHITE']
 
     scube = src.cubes[cubeName]
     rspec = src.spectra[ref]
@@ -360,16 +378,23 @@ def cross_correlate(src, refspec, csfx, ssfx):
     # create cross correlation image
     xc = rspec * scube
     xc = (xc.data.data).sum(axis=0)
-    xc /= np.sum(xc)
 
-    # add image to source
-    xc_img = src.images['MUSE_WHITE'].clone(data_init=np.zeros)
-    xc_img.data.data[:, :] = xc
-    src.images['CROSS_CORRELATION'] = xc_img
+    # add image to source and normalise
+    src.images['CROSS_CORRELATION'] = refImg.new_from_obj(refImg, data=xc)
+    src.images['CROSS_CORRELATION'].norm(typ='sum', value=1.0)
 
-    # do not mask any data when using cross-correlation
-    xcmask = np.array(xc_img.data.data)
+    # pseudo mask to use all data for unmasked cross-correlation
+    xcmask = np.array(refImg.data.data)
     xcmask[:] = 1
+
+    # same mask from original extraction
+    objmask = src.images[mask].data.data
+
+    # normalise cross correlation image to unmasked area
+    xw_img = src.images['CROSS_CORRELATION'].copy()
+    xw_img.mask_selection(objmask == 0)
+    xw_img.norm(typ='sum', value=1.0)
+    xw_img.unmask()
 
     # create sky subtracted cube if true
     if params.SKY_SUB is True:
@@ -377,9 +402,13 @@ def cross_correlate(src, refspec, csfx, ssfx):
     else:
         tcube = src.cubes['MUSE']
 
-    # calculate spectrum
+    # calculate unmasked spectrum
     src.spectra['MUSE_CCWEIGHTED'+ssfx] = \
         sea.compute_optimal_spectrum(tcube, xcmask, xc)
+
+    # calculate masked spectrum
+    src.spectra['MUSE_CCWEIGHTED_MASKED'+ssfx] = \
+        sea.compute_optimal_spectrum(tcube, objmask, xw_img.data.data)
 
     return src
 
@@ -539,7 +568,10 @@ def main():
     # Check the datacube exists and import it.
     print('Importing datacube...')
     try:
-        cube = Cube(params.DATACUBE)
+        if params.DATA_EXT is not ():
+            cube = Cube(params.DATACUBE, ext=params.DATA_EXT)
+        else:
+            cube = Cube(params.DATACUBE)
     except Exception:
         log.write('Error: No datacube file found')
         log.close()
