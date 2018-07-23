@@ -92,6 +92,8 @@ The parameter file provides easy user modification to AutoSpec run modes. Each p
 
 **REF:** this is the reference spectrum to use for cross-correlation. This can either be an aperture size or image name. If an aperture size is specified it must also exist in the APER parameter. Likewise, if you provide an image this must either exist in the IMG_NAME parameter or be set to MUSE_WHITE to use the white light image created from the datacube. 
 
+**DATA_EXT:** this allows the user to specify the data and/or variance extensions of the datacube if they can not be automatically detected by AutoSpec (necessary for the likes of MaNGA cubes). These can be specified by extension number or name. For data only, this should be in the form of int or str, for data and variance specification, use (int,int) or (str,str). When not in use leave as ().
+
 **APER:** this is a list of aperture sizes to extract spectra from in arcseconds, this can either be a single value or a list of values (i.e. 2.0 or [1.0,1.5,2.0]). Maximum value should be less than or equal to half the SIZE parameter.
 
 **IMG:** list of additional image file names. This is useful if you are running AutoSpec in image mode where SExtractor is run on each image file in order to define the objects extraction regions. This is either a single string ('g-band.fits') or a list of strings (['g-band.fits','r-band.fits']).
@@ -185,12 +187,9 @@ Heres a list of functionality that I'd like to add in the near future:
 - [X] Fix spectra that don't extract due to empty segmentation maps.
 - [X] Let users specify a weight image for intial spectral extraction.
 - [X] Create output for summary of results (if successful or error encountered etc).
-- [X] Think of a catchy name!
-- [ ] Make progress bar more persistent.
 - [ ] Test on other systems (windows/mac)
-- [ ] Test compatibility with other datacubes (not just MUSE).
+- [X] Test compatibility with other datacubes (not just MUSE).
 - [X] ~~Allow user to specify number of cores to use.~~ (Now uses faster numpy method instead of multiprocessing)
-- [ ] Quantify to what degree the cross-correlation spectrum is better (in regards to S/N)?
 - [ ] Fix automatic MUSE naming for use with different data.
 - [X] Let user import a segmentation map instead of images.
 - [ ] Add more useful information to output logs.
@@ -212,7 +211,12 @@ Heres a list of functionality that I'd like to add in the near future:
 
 ## How to Cite
 
-Information coming soon...
+The paper describing the original method can be found here: http://adsabs.harvard.edu/abs/2018arXiv180705922G
+
+Please cite AutoSpec as:
+```
+\bibitem[Griffiths \& Conselice(2018)]{2018arXiv180705922G} Griffiths, A., \& Conselice, C.~J.\ 2018, arXiv:1807.05922 
+```
 
 ## Acknowledgements
 
@@ -228,6 +232,10 @@ Copyright (c) 2018, Alex Griffiths
 AutoSpec is licenced under a [BSD 3-Clause License](LICENSE.md)
 
 ## Changelog
+
+**v.1.0.1:** July 23, 2018 
+
+* Added DATA_EXT parameter for user to specify data and/or variance datacube extensions.
 
 **v.1.0.0:** July 5, 2018 
 
