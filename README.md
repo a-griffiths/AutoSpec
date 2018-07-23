@@ -215,7 +215,7 @@ The paper describing the original method can be found here: http://adsabs.harvar
 
 Please cite AutoSpec as:
 ```
-\bibitem[Griffiths \& Conselice(2018)]{2018arXiv180705922G} Griffiths, A., \& Conselice, C.~J.\ 2018, arXiv:1807.05922 
+\bibitem[Griffiths \& Conselice(2018)]{2018arXiv180705922G} Griffiths, A., \& Conselice, C.~J.\ 2018, arXiv:1807.05922, zenodo:1305848  
 ```
 
 ## Acknowledgements
