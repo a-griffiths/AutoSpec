@@ -1,7 +1,7 @@
 # AutoSpec
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1305848.svg)](https://doi.org/10.5281/zenodo.1305848)
 
-This software aims to provide fast, automated extraction of high quality 1D spectra from astronomical datacubes with minimal user effort. AutoSpec takes an IFU datacube and a simple parameter file in order to extract a 1D spectra for each object in a supplied catalogue. A custom designed cross-correlation algorithm helps to improve signal to noise as well as isolate sources from neighbouring contaminants.
+This software aims to provide fast, automated extraction of high quality 1D spectra from astronomical datacubes with minimal user effort. AutoSpec takes an IFU datacube and a simple parameter file in order to extract a 1D spectra for each object in a supplied catalogue. A custom designed cross-correlation algorithm helps to improve signal to noise as well as isolate sources from neighbouring contaminants. You can find the preprint of the science paper describing the software on the [arXiv](https://arxiv.org/abs/1807.05922). 
 
 ## Contents
 
@@ -211,7 +211,7 @@ Heres a list of functionality that I'd like to add in the near future:
 
 ## How to Cite
 
-The paper describing the original method can be found here: http://adsabs.harvard.edu/abs/2018arXiv180705922G
+The paper describing the original method can be found here: http://adsabs.harvard.edu/abs/2018arXiv180705922G or here https://arxiv.org/abs/1807.05922
 
 Please cite AutoSpec as:
 ```
