@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Datacube Spectrum Extractor
+AutoSpec: Automated Datacube Spectrum Extractor
 @author: Alex Griffiths
+v 1.1.0
+05-09-2018
 """
 # Import dependencies.
 from __future__ import absolute_import, division, print_function
 
-from mpdaf.obj import Cube, Image  # Spectrum, iter_spe
-from mpdaf.sdetect import Source, sea
+from mpdaf.obj import Cube, Image
+from mpdaf.sdetect import Source
 import matplotlib.pyplot as plt
 import astropy.units as u
 import seaborn as sns
@@ -19,17 +21,18 @@ import time
 import sys
 import os
 
-# Set up seaborn plot
-sns.set_style("ticks")   # white, dark, whitegrid, darkgrid, ticks
-sns.set_context("paper")  # paper, notebook, talk, poster
+# Set up seaborn plot.
+sns.set_style("ticks")
+sns.set_context("paper")
 
+# Software info.
 SOFTWARE = 'AutoSpec'
-VERSION = 'v.1.0.1'
+VERSION = 'v.1.1.0'
 AUTHOR = 'Alex Griffiths'
 
 
 # Main function that does the bulk of the work.
-def create_source(ID, ra, dec, size='', mode='', ref=''):
+def create_source(ID, ra, dec, size, ref):
     """Create source object based on input datacube and images.
 
     Appends images and subcube to the source and extracts object spectra.
@@ -42,66 +45,52 @@ def create_source(ID, ra, dec, size='', mode='', ref=''):
         Right ascension in degrees
     dec : double
         Declination in degrees
-    size : str
+    size : float
         The size to extract. It corresponds to the size along the delta axis
         and the image is square. If empty get value from parameter file.
-    mode : Str
-        If img, spectra will be extracted based on morphology using SExtractor
-        segmentation maps carried out on images provided. If aper, will extract
-        based on provided aperture size in ref
     ref : Str
         If mode is img, ref should be name of reference image for spectrum
         weighting. If mode is aper, should be the size of aperture to extract
         the spectrum from.
 
     """
-    weight_img = params.WEIGHT_IMG.upper()
-    refspec = ext_mode = ext_size = ''
-
-    if mode == '':
-        ext_size = float(params.SIZE)
-        if params.REF.replace('.', '').isdigit() is True:
-            ref = str(params.REF)
-            ext_mode = 'APER'
-            refspec = 'MUSE_APER_%.1f' % float(params.REF)
-        elif params.REF.replace('.', '').isdigit() is False:
-            ref = str(params.REF.upper())
-            ext_mode = 'IMG'
-            refspec = 'MUSE_TOT'
-    elif mode != '':
-        ext_mode = mode.upper()
-        ref = ref.upper()
-        ext_size = float(size)
-        if ext_mode == 'APER':
-            refspec = 'MUSE_APER_%.1f' % float(ref)
-        elif ext_mode == 'IMG':
-            refspec = 'MUSE_TOT'
-            weight_img = ref.upper()
+    # Set up the working mode and reference spectrum tag.
+    ref = ref.replace('.fits', '').upper()
+    if ref == '':
+        ext_mode = 'IMG'
+        refspec = 'MUSE_WHITE'
+    elif ref not in imgs.keys():
+        print('Reference not in images or apertures, using white light.')
+        ext_mode = 'IMG'
+        refspec = 'MUSE_WHITE'
+    elif ref.replace('.', '').isdigit() is True:
+        ext_mode = 'APER'
+        refspec = 'MUSE_APER_%.1f' % float(ref)
+    elif ref.replace('.', '').isdigit() is False:
+        ext_mode = 'IMG'
+        refspec = ref
 
     # This creates the source object (see MPDAF for more details).
-    s = Source.from_data(ID=int(ID), ra=ra, dec=dec,
+    s = Source.from_data(ID=ID, ra=ra, dec=dec, extras=extra,
                          origin=(params.ORIG_FROM, params.ORIG_FROMV,
-                                 params.ORIG_CUBE, params.ORIGN_CUBEV),
-                         extras=extra)
+                                 params.ORIG_CUBE, params.ORIGN_CUBEV))
 
-    # Add subcube, create white image and add additional images.
-    s = add_data(s, ext_size)
+    # Add subcube, create white image and add any additional images.
+    s = add_data(s, size)
 
-    if ext_mode == 'IMG':
-        s, seg = create_masks(s)
-        mask = 'MASK_'+params.OBJ_MASK
+    # Add SExtractor segmentation maps and create masks.
+    s, seg = create_masks(s)
+    mask = 'MASK_'+params.OBJ_MASK.upper()
+    ref_mask = 'MASK_'+params.OBJ_MASK.upper()
 
-        # Sometimes SExtractor may not pick up an object in a particular image.
-        # If this is the case and one of the segmentation maps are empty, the
-        # intersection mask will also be empty, in these cases it is best to
-        # default to the union mask.
-        if np.sum(s.images[mask].data.data) == 0:
-            mask = 'MASK_UNION'
+    # If the user sets mask to intersection and it is empty, default to the
+    # union mask instead.
+    if np.sum(s.images[mask].data.data) == 0:
+        mask = 'MASK_UNION'
+        ref_mask = 'MASK_UNION'
 
-    # produce masks for aperture mode using given aperture size. The code also
-    # reverts to aperture mode if is set to image mode and masks are empty.
-    elif ext_mode == 'APER' or np.sum(s.images[mask].data.data) == 0:
-        # if using aperture as reference, create sky and object mask
+    # If aperture used as reference, create mask at set aperture size.
+    if ext_mode == 'APER':
         temp = s.images['MUSE_WHITE'].copy()
         pxsz = temp.get_step(unit=u.arcsec)[0]
         cntr = [temp.shape[0]/2, temp.shape[0]/2]
@@ -110,37 +99,19 @@ def create_source(ID, ra, dec, size='', mode='', ref=''):
         temp.mask_region(center=cntr, radius=rds, unit_center=None,
                          unit_radius=None, inside=False)
 
-        s.images['MASK_SKY'] = temp.new_from_obj(temp, data=temp.mask*1)
-        s.images['MASK_APER_'+ref] = \
+        s.images['MASK_APER_%.1f_SKY' % float(ref)] = \
+            temp.new_from_obj(temp, data=temp.mask*1)
+        s.images['MASK_APER_%.1f_OBJ' % float(ref)] = \
             temp.new_from_obj(temp, data=abs((temp.mask*1)-1))
-        mask = 'MASK_APER_'+ref
 
-        del temp
+        ref_mask = 'MASK_APER_%.1f_OBJ' % float(ref)
 
-    # select weight image, default to muse white if not in suplied images
-    if weight_img in list(imgs.keys()):
-        subcub = s.cubes['MUSE']
-        wcsref = subcub.wcs
+    # Extract all spectra set by user.
+    tags = [i for i in s.images.keys() if 'SEG_' not in i and 'MASK_' not in i]
 
-        w_img = imgs[weight_img]
-        w_img = w_img.resample(newdim=subcub.shape[1:],
-                               newstart=wcsref.get_start(unit=u.deg),
-                               newstep=wcsref.get_step(unit=u.arcsec),
-                               order=0, unit_start=u.deg,
-                               unit_step=u.arcsec)
-    else:
-        weight_img = 'MUSE_WHITE'
-        w_img = s.images['MUSE_WHITE'].copy()
-
-    # normalise image so unmasked area totals 1
-    w_img.mask_selection(s.images[mask].data.data == 0)
-    w_img.norm(typ='sum', value=1.0)
-    w_img.unmask()
-
-    # extract spectra
     s.extract_spectra(s.cubes['MUSE'], obj_mask=mask,
                       sky_mask='MASK_SKY', skysub=params.SKY_SUB,
-                      tags_to_try=weight_img, apertures=params.APER)
+                      tags_to_try=tags, apertures=params.APER)
 
     # Set up naming convention based on if the user has sky-subtraction set.
     if params.SKY_SUB is True:
@@ -149,116 +120,27 @@ def create_source(ID, ra, dec, size='', mode='', ref=''):
         ssfx = ''
 
     # No need to subtract continuum if we're not going to cross-correlate.
-    if params.XCOR is True:
+    if params.XCOR is True and params.CONT_SUB is True:
+        # Set up naming conventions.
         csfx = '_CONTSUB'
-
-        # Continuum subtraction method depends on whether the user has
-        # sky-subtraction or not, this part takes the longest but is neccessary
-        # to achieve good results if there is contamination in the frame.
-        s.spectra[refspec+ssfx+csfx] = s.spectra[refspec+ssfx] - \
+        # Perform continuum subtraction on reference spectrum.
+        s.spectra[refspec+csfx+ssfx] = s.spectra[refspec+ssfx] - \
             s.spectra[refspec+ssfx].poly_spec(params.CONT_POLY)
+        # Perform continuum subtraction on datacube.
         s.add_cube(continuum_subtraction(s, params.CONT_POLY), 'MUSE'+csfx)
 
     else:
         csfx = ''
 
-    # Finally we cross correlate to get the final spectrum.
-    s = cross_correlate(s, refspec, csfx, ssfx, mask)
+    if params.XCOR is True:
+        # Extract a cross-correlate spectrum without continuum subtraction...
+        s = cross_correlate(s, refspec, '', ssfx, ref_mask)
+        # ...and with continuum subtraction.
+        s = cross_correlate(s, refspec, csfx, ssfx, ref_mask)
 
     # If user wants them, plots are created and output here.
     if params.PLOTS is True:
-
-        # Make source subdirectory
-        t_path = params.OUTPUT+'/images/'+str(ID)
-        if not os.path.exists(t_path):
-            os.makedirs(t_path)
-
-        if ext_mode == 'APER':
-            # Plot images and save file.
-            r = 1
-            c = len(imgs)+1
-            plt.subplots(r, c, figsize=(3*c, 3*r), sharex=True, sharey=True)
-            for i, key in enumerate(imgs):
-                plt.subplot(r, c, i+1)
-                s.images[key].plot(title=key, cmap=params.CMAP)
-            plt.subplot(r, c, len(imgs)+1)
-            s.images['MUSE_WHITE'].plot(title='MUSE_WHITE', cmap=params.CMAP)
-        else:
-            # Plot images and save file.
-            if len(imgs) != 0:
-                r = int(2+np.ceil(len(smaps)/(len(imgs)+1)))
-                c = len(imgs)+1
-                rm = int(np.ceil(len(smaps) /
-                                 (len(imgs)+1))*(len(imgs)+1)-len(smaps))
-                plt.subplots(r, c, figsize=(3*c, 3*r), sharex=True,
-                             sharey=True)
-                for i, key in enumerate(imgs):
-                    plt.subplot(r, c, i+1)
-                    s.images[key].plot(title=key, cmap=params.CMAP)
-                    plt.subplot(r, c, len(imgs)+i+2)
-                    s.images['SEG_'+str(key)].plot(title='SEG_'+str(key),
-                                                   cmap=params.CMAP)
-                plt.subplot(r, c, len(imgs)+1)
-                s.images['MUSE_WHITE'].plot(title='MUSE_WHITE',
-                                            cmap=params.CMAP)
-                plt.subplot(r, c, 2*len(imgs)+2)
-                s.images['SEG_MUSE_WHITE'].plot(title='SEG_MUSE_WHITE',
-                                                cmap=params.CMAP)
-                for i, key in enumerate(smaps):
-                    plt.subplot(r, c, 3*len(imgs)+i+1)
-                    s.images['SEG_'+str(key)].plot(title='SEG_'+key,
-                                                   cmap=params.CMAP)
-                for i in range(0, rm):
-                    plt.subplot(r, c, (r*c)-i)
-                    plt.axis('off')
-            else:
-                plt.subplots(1, len(smaps)+1, figsize=(3*(len(smaps)+1), 3))
-                for i, key in enumerate(smaps):
-                    plt.subplot(1, len(smaps)+1, i+1)
-                    s.images['SEG_'+str(key)].plot(title='SEG_'+key,
-                                                   cmap=params.CMAP)
-                plt.subplot(1, len(smaps)+1, len(smaps)+1)
-                s.images['SEG_MUSE_WHITE'].plot(title='SEG_MUSE_WHITE',
-                                                cmap=params.CMAP)
-        plt.tight_layout(h_pad=1, w_pad=1)
-        plt.savefig(t_path+'/%d_IMAGES.jpg' % ID)
-
-        # Plot masks and save file.
-        plt.figure(figsize=(5, 3))
-        plt.subplot(1, 2, 1)
-        s.images[mask].plot(title=mask, cmap=params.CMAP)
-        plt.subplot(1, 2, 2)
-        s.images['MASK_SKY'].plot(title='MASK_SKY', cmap=params.CMAP)
-        plt.yticks([])
-        plt.ylabel('')
-        plt.tight_layout()
-        plt.savefig(t_path+'/%d_MASKS.jpg' % ID)
-
-        # Plot spectra and save file.
-        plt.subplots(3, 1, figsize=(10, 7.5), sharex=True)
-        plt.subplot(3, 1, 1)
-        s.spectra[refspec+ssfx].plot(title=refspec+ssfx)
-        plt.xticks([])
-        plt.xlabel('')
-        plt.ylabel('')
-        plt.subplot(3, 1, 2)
-        s.spectra['MUSE_CCWEIGHTED_MASKED' +
-                  ssfx].plot(title='MUSE_CCWEIGHTED_MASKED'+ssfx)
-        plt.xticks([])
-        plt.xlabel('')
-        plt.subplot(3, 1, 3)
-        s.spectra['MUSE_CCWEIGHTED'+ssfx].plot(title='MUSE_CCWEIGHTED'+ssfx)
-        plt.ylabel('')
-        plt.tight_layout()
-        plt.savefig(t_path+'/%d_SPECTRA.jpg' % ID)
-
-        # Plot and save cross correlation.
-        if params.XCOR is True:
-            plt.figure(figsize=(4, 4))
-            s.images['CROSS_CORRELATION'].plot(title='CROSS_CORRELATION',
-                                               cmap=params.CMAP)
-            plt.tight_layout()
-            plt.savefig(t_path+'/%d_XCOR.jpg' % ID)
+        make_plots(s, ID, refspec, ssfx)
 
     # Output file is cleaned if the user wishes.
     s = clean_output(s, refspec, csfx, ssfx)
@@ -267,7 +149,7 @@ def create_source(ID, ra, dec, size='', mode='', ref=''):
 
 
 def add_data(src, size):
-    """Add images to the source object
+    """Add additional images and segmentation maps to the source object
 
     Parameters
     ----------
@@ -281,21 +163,12 @@ def add_data(src, size):
     src.add_cube(cube, 'MUSE', size=size)
     src.add_white_image(cube, size=size)
 
-    subcub = src.cubes['MUSE']
-    wcsref = subcub.wcs
-
-    # add images
+    # Add images.
     for key in imgs:
         src.add_image(imgs[key], name=key)
 
-    # add extra segmentation maps and resample to match white image
+    # Add extra segmentation maps.
     for key in smaps:
-        temp = smaps[key]
-        temp = temp.resample(newdim=subcub.shape[1:],
-                             newstart=wcsref.get_start(unit=u.deg),
-                             newstep=wcsref.get_step(unit=u.arcsec),
-                             order=0, unit_start=u.deg, unit_step=u.arcsec)
-
         src.add_image(smaps[key], name='SEG_'+key)
 
     return src
@@ -312,11 +185,12 @@ def create_masks(src):
     """
     src.add_seg_images(del_sex=False)
     seg = [i for i in src.images.keys() if 'SEG_' in i]
-    # do not use the muse white light image not set.
+    # Do not use the white light image not set.
     if params.USE_WHITE is False:
         seg.remove('SEG_MUSE_WHITE')
     src.find_sky_mask(seg)
     src.find_union_mask(seg)
+    # Check if any maps are empty before creating intersection mask.
     for key in seg:
         if np.sum(src.images[key].data.data) == 0:
             seg.remove(key)
@@ -368,49 +242,99 @@ def cross_correlate(src, refspec, csfx, ssfx, mask):
         Object mask used for initial spectrum extraction
 
     """
-    ref = refspec+ssfx+csfx
+    ref = refspec+csfx+ssfx
     cubeName = 'MUSE'+csfx
     refImg = src.images['MUSE_WHITE']
 
     scube = src.cubes[cubeName]
     rspec = src.spectra[ref]
 
-    # create cross correlation image
+    # Create cross correlation image.
     xc = rspec * scube
     xc = (xc.data.data).sum(axis=0)
 
-    # add image to source and normalise
-    src.images['CROSS_CORRELATION'] = refImg.new_from_obj(refImg, data=xc)
-    src.images['CROSS_CORRELATION'].norm(typ='sum', value=1.0)
+    # Add image to source.
+    src.images['CROSS_CORRELATION'+csfx] = refImg.new_from_obj(refImg, data=xc)
 
-    # pseudo mask to use all data for unmasked cross-correlation
-    xcmask = np.array(refImg.data.data)
-    xcmask[:] = 1
-
-    # same mask from original extraction
-    objmask = src.images[mask].data.data
-
-    # normalise cross correlation image to unmasked area
-    xw_img = src.images['CROSS_CORRELATION'].copy()
-    xw_img.mask_selection(objmask == 0)
-    xw_img.norm(typ='sum', value=1.0)
-    xw_img.unmask()
-
-    # create sky subtracted cube if true
-    if params.SKY_SUB is True:
-        tcube = src.cubes['MUSE'] - src.spectra['MUSE_SKY']
-    else:
-        tcube = src.cubes['MUSE']
-
-    # calculate unmasked spectrum
-    src.spectra['MUSE_CCWEIGHTED'+ssfx] = \
-        sea.compute_optimal_spectrum(tcube, xcmask, xc)
-
-    # calculate masked spectrum
-    src.spectra['MUSE_CCWEIGHTED_MASKED'+ssfx] = \
-        sea.compute_optimal_spectrum(tcube, objmask, xw_img.data.data)
+    # Extract masked cross-correlation spectrum.
+    src.extract_spectra(src.cubes['MUSE'], obj_mask=mask,
+                        sky_mask='MASK_SKY', skysub=params.SKY_SUB,
+                        tags_to_try=['CROSS_CORRELATION'+csfx])
 
     return src
+
+
+def make_plots(src, ID, refspec, ssfx):
+    """Create and output plots
+
+    Parameters
+    ----------
+    src : mpdaf.sdetect.source.Source
+        Input source object
+    ID : int
+        ID of the source
+    refspec : Str
+        String representing reference spectra for cross correlation
+    ssfx : Str
+        Sky subtraction suffix string
+
+    """
+    # Set colourmap.
+    plt.rcParams['image.cmap'] = str(params.CMAP)
+
+    # Make source subdirectory.
+    t_path = params.OUTPUT+'/images/'+str(ID)
+    if not os.path.exists(t_path):
+        os.makedirs(t_path)
+
+    # Plot images and segmentation maps and save file.
+    key = [i for i in src.images.keys() if 'MASK' not in i]
+    key = [i for i in key if 'CROSS_CORRELATION' not in i]
+    k1 = [i for i in key if 'SEG' not in i]
+    k2 = [i for i in key if 'SEG' in i]
+    c = len(k1)
+    r = np.ceil(len(key)/len(k1))
+    plt.figure(figsize=(c*2.5, r*2.5))
+    for i, j in enumerate(k1):
+        plt.subplot(r, c, i+1)
+        src.images[j].plot(title=j)
+        plt.subplot(r, c, i+1+len(k1))
+        src.images['SEG_'+j].plot(title='SEG_'+j)
+        k2.remove('SEG_'+j)
+    for i, j in enumerate(k2):
+        plt.subplot(r, c, i+1+2*len(k1))
+        src.images[j].plot(title=j)
+    plt.tight_layout()
+    plt.savefig(t_path+'/%s_IMAGES.jpg' % ID)
+
+    # Plot masks and save file.
+    key = [i for i in src.images.keys() if 'MASK' in i]
+    plt.figure(figsize=(len(key)*2.5, len(key)))
+    for i, j in enumerate(key):
+        plt.subplot(1, len(key), i+1)
+        src.images[j].plot(title=j)
+    plt.tight_layout()
+    plt.savefig(t_path+'/%s_MASKS.jpg' % ID)
+
+    # Plot spectra and save file.
+    key = [i for i in src.spectra.keys() if 'CROSS_CORRELATION' in i]
+    key.insert(0, refspec+ssfx)
+    plt.figure(figsize=(10, len(key)*2.5))
+    for i, j in enumerate(key):
+        plt.subplot(len(key), 1, i+1)
+        src.spectra[j].plot(title=j)
+    plt.tight_layout()
+    plt.savefig(t_path+'/%s_SPECTRA.jpg' % ID)
+
+    # Plot and save cross correlation images.
+    if params.XCOR is True:
+        key = [i for i in src.images.keys() if 'CROSS_CORRELATION' in i]
+        plt.figure(figsize=(len(key)*4, 4))
+        for i, j in enumerate(key):
+            plt.subplot(1, len(key), i+1)
+            src.images[j].plot(title=j)
+        plt.tight_layout()
+        plt.savefig(t_path+'/%s_XCOR.jpg' % ID)
 
 
 def clean_output(src, refspec, csfx, ssfx):
@@ -451,13 +375,15 @@ def clean_output(src, refspec, csfx, ssfx):
 
     if params.OUT_XCOR is False:
         print('Removing cross-correlation')
-        del src.images['CROSS_CORRELATION']
+        rm = [i for i in src.images.keys() if 'CROSS_CORRELATION' in i]
+        for n in rm:
+            del src.images[n]
 
     # Remove additional spectra.
     if params.OUT_SPEC is False:
         print('Removing additional spectra')
-        rm = [i for i in src.spectra.keys() if 'MUSE_CCWEIGHTED'+ssfx not in i]
-        rm = [i for i in rm if refspec+ssfx+csfx not in i]
+        rm = [i for i in src.spectra.keys() if 'CROSS_CORRELATION' not in i]
+        rm = [i for i in rm if refspec+csfx+ssfx not in i]
         for n in rm:
             del src.spectra[n]
 
@@ -469,7 +395,7 @@ def clean_output(src, refspec, csfx, ssfx):
     return src
 
 
-# Create progress bar to show for catalog processing.
+# Create progress bar to show catalog progress.
 def print_progress(ID, iteration, total, bar_length=100):
     """
     Call in a loop to create terminal progress bar
@@ -506,7 +432,7 @@ def main():
     # Set up global variables.
     global cube, params, imgs, smaps, extra
 
-    # create log file and directory
+    # Create log file.
     if not os.path.exists('logs'):
         os.makedirs('logs')
 
@@ -518,7 +444,6 @@ def main():
     cwd = os.getcwd()+'/'
 
     # First check that the parameter file exists and is named correctly.
-    # If it exists import the file.
     print('Getting parameter file...')
     try:
         sys.path.append(str(cwd))
@@ -541,29 +466,11 @@ def main():
     # Check that the defined catalogue file exists and import it.
     print('Loading catalog...')
     try:
-        cat = np.genfromtxt(params.CATALOG, comments='#', dtype=str)
+        cat = np.genfromtxt(params.CATALOG, dtype=str)
     except Exception:
         log.write('Error: No catalog file found')
         log.close()
         raise ImportError('No catalog file ('+str(params.CATALOG)+') found.')
-
-    # Import any additional images defined in the parameter file.
-    # Check if user has added any images.
-    imgs = {}
-    if params.IMG != '':
-        print('Importing images...')
-        # add check here
-        for i, j in zip(params.IMG, params.IMG_NAME):
-            imgs['{0}'.format(j.upper())] = Image(i)
-
-    # Import any additional segmentation maps defined in the parameter file.
-    # Check if user has added any images.
-    smaps = {}
-    if params.SEG_MAP != '':
-        print('Importing segmentation maps...')
-        # add check here
-        for i, j in zip(params.SEG_MAP, params.SEG_NAME):
-            smaps['{0}'.format(j.upper())] = Image(i)
 
     # Check the datacube exists and import it.
     print('Importing datacube...')
@@ -577,12 +484,31 @@ def main():
         log.close()
         raise ImportError('No datacube file ('+str(params.DATACUBE)+') found.')
 
+    # Import any additional images defined in the parameter file.
+    imgs = {}
+    if params.IMG != '':
+        print('Importing and aligning images...')
+        ref_white = cube.sum(axis=0)
+        params.IMG_NAME = [os.path.splitext(x)[0].upper() for x in params.IMG]
+        for i, j in zip(params.IMG, params.IMG_NAME):
+            imgs['{0}'.format(j.upper())] = \
+                Image(i).align_with_image(ref_white)
+
+    # Import any additional segmentation maps defined in the parameter file.
+    smaps = {}
+    if params.SEG != '':
+        print('Importing segmentation maps...')
+        params.SEG_NAME = [os.path.splitext(x)[0].upper() for x in params.SEG]
+        for i, j in zip(params.SEG, params.SEG_NAME):
+            smaps['{0}'.format(j.upper())] = Image(i)
+
     # If all files load successfully, create output directory folder.
     print('Creating output directories...')
     file_path = params.OUTPUT
     if not os.path.exists(file_path):
         os.makedirs(file_path)
 
+    # Create images folder if plots are to be created.
     if params.PLOTS is True:
         if not os.path.exists(file_path+'/images'):
             os.makedirs(file_path+'/images')
@@ -592,33 +518,32 @@ def main():
              'EXT_V': (VERSION, 'version of the extraction software'),
              'AUTH': (AUTHOR, 'author of extraction software')}
 
-    # Need to check if there is one or more object in the input catalog.
-    # This code calls the functions to create the source object and output
-    # the results. The user can decide (via the param.py file) if they want to
-    # perform cross correlation, continuum subtraction and sky subtraction.
-    # The user can also decide if they want the images, segmentation maps and
-    # cross-correlation maps to be included in the output file.
-
     # Run code for a single object catalog.
-    if cat.size <= 6:
-        print('Extracting source '+str(int(cat[0]))+'...\n')
+    if cat.size <= 5:
+        print('Extracting single source '+cat[0]+'...\n')
         try:
             ts = time.time()
-            if params.MODE.upper() == 'SAME' or cat.size == 3:
-                S = create_source(ID=int(cat[0]), ra=float(cat[1]),
-                                  dec=float(cat[2]))
-            elif params.MODE.upper() == 'CAT':
-                S = create_source(ID=int(cat[0]), ra=float(cat[1]),
-                                  dec=float(cat[2]), size=str(cat[3]),
-                                  mode=str(cat[4]), ref=str(cat[5]))
-            S.write(file_path+'/'+params.PRE_OUT+'%d.fits' % int(cat[0]))
+            # Extract using settings in parameter file.
+            if params.MODE.upper() == 'PARAM' or cat.size == 3:
+                S = create_source(ID=int(cat[0]),
+                                  ra=float(cat[1]),
+                                  dec=float(cat[2]),
+                                  size=float(params.SIZE),
+                                  ref=str(params.REF))
+            # Extract using parameters defined in the catalog.
+            else:
+                S = create_source(ID=int(cat[0]),
+                                  ra=float(cat[1]),
+                                  dec=float(cat[2]),
+                                  size=float(cat[3]),
+                                  ref=str(cat[4]))
+            S.write(file_path+'/'+params.PRE_OUT+'%s.fits' % cat[0])
             rt = time.time()-ts
-            log.write(str(int(cat[0])) +
-                      ': Extracted Successfully in %.2fs \n' % rt)
+            log.write('%s: Extracted Successfully in %.2fs\n' % (cat[0], rt))
             del S
         except Exception as e:
             print('Error: '+str(e))
-            log.write(str(int(cat[0]))+': Error, '+str(e)+'\n')
+            log.write(cat[0] + ': Error 1, '+str(e)+'\n')
             pass
 
     # Run code over multi-object catalog.
@@ -629,26 +554,32 @@ def main():
         for n, m in enumerate(cat):
             try:
                 ts = time.time()
-                if params.MODE.upper() == 'SAME' or cat[0].size == 3:
-                    S = create_source(ID=int(m[0]), ra=float(m[1]),
-                                      dec=float(m[2]))
-                elif params.MODE.upper() == 'CAT':
-                    S = create_source(ID=int(m[0]), ra=float(m[1]),
-                                      dec=float(m[2]), size=str(m[3]),
-                                      mode=str(m[4]), ref=str(m[5]))
-                S.write(file_path+'/'+params.PRE_OUT+'%d.fits' % int(m[0]))
+                # Extract using settings in parameter file.
+                if params.MODE.upper() == 'PARAM' or m.size == 3:
+                    S = create_source(ID=int(m[0]),
+                                      ra=float(m[1]),
+                                      dec=float(m[2]),
+                                      size=float(params.SIZE),
+                                      ref=str(params.REF))
+                # Extract using parameters defined in the catalog.
+                else:
+                    S = create_source(ID=int(m[0]),
+                                      ra=float(m[1]),
+                                      dec=float(m[2]),
+                                      size=float(m[3]),
+                                      ref=str(m[4]))
+                S.write(file_path+'/'+params.PRE_OUT+'%s.fits' % m[0])
                 rt = time.time()-ts
-                log.write(str(int(m[0])) +
-                          ': Extracted Successfully in %.2fs \n' % rt)
+                log.write('%s: Extracted Successfully in %.2fs\n' % (m[0], rt))
                 del S
             except Exception as e:
-                print('Error : Source '+str(int(m[0]))+' '+str(e), end='\r')
-                log.write(str(int(m[0]))+': Error, '+str(e)+'\n')
+                print('Error : Source '+m[0]+' '+str(e), end='\r')
+                log.write(m[0] + ': Error, '+str(e)+'\n')
                 pass
             # Show current progress.
-            print_progress(int(m[0]), n+1, length, bar_length=50)
+            print_progress(m[0], n+1, length, bar_length=50)
 
-    # close the log file
+    # close the log file.
     log.close()
 
 

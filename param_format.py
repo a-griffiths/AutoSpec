@@ -7,12 +7,12 @@ MODE           = 'param'                       # 'param' or 'cat' to use configu
 
 # ----------- Reference Spectra -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-REF            = 'g-band'                      # reference spectrum to use for cross correlation, must also be in image (IMG), aperture (APER) parameters or '' to use white light image.
+REF            = ''                            # reference spectrum to use for cross correlation, must also be in image (IMG), aperture (APER) parameters or '' to use white light image.
 
 # ----------- Required Files --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-DATACUBE       = 'datacube.fits'               # name of datacube file (string).
-CATALOG        = 'catalog.txt'                 # name of catalog file (string).
+DATACUBE       = ''                            # name of datacube file (string).
+CATALOG        = ''                            # name of catalog file (string).
 
 # ----------- Datacube Extension: Use if datacube extensions are not specified in fits headers --------------------------------------------------------------------------------------------
 
@@ -20,14 +20,14 @@ DATA_EXT       = ()                            # The number/name of the data (in
 
 # ----------- Spectral Extractions --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-APER           = 1.0, 2.0                      # aperture sizes (in arcseconds) for spectrum extraction (float or array or floats).
-IMG            = 'g-band.fits', 'r-band.fits'  # name of additional image files for weighted spectra and segmentation extractions (string or comma seperated list of strings), '' if none.
+APER           = ''                            # aperture sizes (in arcseconds) for spectrum extraction (float or array or floats).
+IMG            = ''                            # name of additional image files for weighted spectra and segmentation extractions (string or comma seperated list of strings), '' if none.
 
 # ----------- Object Masks ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 USE_WHITE      =  True                         # if AutoSpec should also use the MUSE_WHITE segmentation map to create masks (True or False).
 OBJ_MASK       = 'INTER'                       # object mask from union (UNION) or intersection (INTER) of segmentation maps (string).
-SEG            = 'g-seg.fits', 'r-seg.fits'    # name of additional segmentation maps files to be used (string or comma seperated list of strings).
+SEG            = ''                            # name of additional segmentation maps files to be used (string or comma seperated list of strings).
 
 # ----------- Output Formatting -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
