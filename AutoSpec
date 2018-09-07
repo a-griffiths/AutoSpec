@@ -489,18 +489,18 @@ def main():
     if params.IMG != '':
         print('Importing and aligning images...')
         ref_white = cube.sum(axis=0)
-        params.IMG_NAME = [os.path.splitext(x)[0].upper() for x in params.IMG]
-        for i, j in zip(params.IMG, params.IMG_NAME):
-            imgs['{0}'.format(j.upper())] = \
+        itmp = params.IMG if isinstance(params.IMG, tuple) else [params.IMG]
+        for i in itmp:
+            imgs[i.replace('.fits', '').upper()] = \
                 Image(i).align_with_image(ref_white)
 
     # Import any additional segmentation maps defined in the parameter file.
     smaps = {}
     if params.SEG != '':
         print('Importing segmentation maps...')
-        params.SEG_NAME = [os.path.splitext(x)[0].upper() for x in params.SEG]
-        for i, j in zip(params.SEG, params.SEG_NAME):
-            smaps['{0}'.format(j.upper())] = Image(i)
+        stmp = params.SEG if isinstance(params.SEG, tuple) else [params.SEG]
+        for i in stmp:
+            smaps[i.replace('.fits', '').upper()] = Image(i)
 
     # If all files load successfully, create output directory folder.
     print('Creating output directories...')
