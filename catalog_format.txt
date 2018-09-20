@@ -1,5 +1,5 @@
-# Example catalog file for AutoSpec v 1.1.0
-# DATE: 05-09-2018
+# Example catalog file for AutoSpec v 1.1.2
+# DATE: 20-09-2018
 
 # Parameter mode catalog format [id ra dec].
 #

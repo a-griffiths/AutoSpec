@@ -3,8 +3,8 @@
 """
 AutoSpec: Automated Datacube Spectrum Extractor
 @author: Alex Griffiths
-v 1.1.0
-05-09-2018
+v 1.1.2
+20-09-2018
 """
 # Import dependencies.
 from __future__ import absolute_import, division, print_function
@@ -59,16 +59,16 @@ def create_source(ID, ra, dec, size, ref):
     if ref == '':
         ext_mode = 'IMG'
         refspec = 'MUSE_WHITE'
+    elif ref.replace('.', '').isdigit() is False:
+        ext_mode = 'IMG'
+        refspec = ref
+    elif ref.replace('.', '').isdigit() is True:
+        ext_mode = 'APER'
+        refspec = 'MUSE_APER_%.1f' % float(ref)
     elif ref not in imgs.keys():
         print('Reference not in images or apertures, using white light.')
         ext_mode = 'IMG'
         refspec = 'MUSE_WHITE'
-    elif ref.replace('.', '').isdigit() is True:
-        ext_mode = 'APER'
-        refspec = 'MUSE_APER_%.1f' % float(ref)
-    elif ref.replace('.', '').isdigit() is False:
-        ext_mode = 'IMG'
-        refspec = ref
 
     # This creates the source object (see MPDAF for more details).
     s = Source.from_data(ID=ID, ra=ra, dec=dec, extras=extra,
@@ -108,10 +108,11 @@ def create_source(ID, ra, dec, size, ref):
 
     # Extract all spectra set by user.
     tags = [i for i in s.images.keys() if 'SEG_' not in i and 'MASK_' not in i]
+    aps = params.APER if isinstance(params.APER, tuple) else [params.APER]
 
     s.extract_spectra(s.cubes['MUSE'], obj_mask=mask,
                       sky_mask='MASK_SKY', skysub=params.SKY_SUB,
-                      tags_to_try=tags, apertures=params.APER)
+                      tags_to_try=tags, apertures=aps)
 
     # Set up naming convention based on if the user has sky-subtraction set.
     if params.SKY_SUB is True:
@@ -186,8 +187,10 @@ def create_masks(src):
     src.add_seg_images(del_sex=False)
     seg = [i for i in src.images.keys() if 'SEG_' in i]
     # Do not use the white light image not set.
-    if params.USE_WHITE is False:
+    if params.USE_IMGS is False:
         seg.remove('SEG_MUSE_WHITE')
+        for key in imgs:
+            seg.remove('SEG_'+key)
     src.find_sky_mask(seg)
     src.find_union_mask(seg)
     # Check if any maps are empty before creating intersection mask.
