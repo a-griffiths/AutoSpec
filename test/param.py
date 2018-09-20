@@ -1,5 +1,5 @@
-# Default configuration file for AutoSpec v 1.1.0
-# DATE: 05-09-2018
+# Default configuration file for AutoSpec v 1.1.2
+# DATE: 20-09-2018
 
 # ----------- Operating Mode -------------------------------------------------------------------------------------------------------------------------------------------------------------
  
@@ -20,14 +20,14 @@ DATA_EXT       = ()                            # The number/name of the data (in
 
 # ----------- Spectral Extractions --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-APER           = 1.0, 2.0                      # aperture sizes (in arcseconds) for spectrum extraction (float or array or floats).
-IMG            = 'g-band.fits', 'r-band.fits'  # name of additional image files for weighted spectra and segmentation extractions (string or comma seperated list of strings), '' if none.
+APER           = 2.0                           # aperture sizes (in arcseconds) for spectrum extraction (float or array or floats).
+IMG            = 'g-band.fits','r-band.fits'   # name of additional image files for weighted spectra and segmentation extractions (string or comma seperated list of strings), '' if none.
 
 # ----------- Object Masks ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-USE_WHITE      =  True                         # if AutoSpec should also use the MUSE_WHITE segmentation map to create masks (True or False).
+USE_IMGS       =  True                         # if AutoSpec should also use the segmentation maps created from the images in IMG parameter to create final masks (True or False).
 OBJ_MASK       = 'INTER'                       # object mask from union (UNION) or intersection (INTER) of segmentation maps (string).
-SEG            = 'g-seg.fits', 'r-seg.fits'    # name of additional segmentation maps files to be used (string or comma seperated list of strings).
+SEG            = 'g-seg.fits'                  # name of additional segmentation maps files to be used (string or comma seperated list of strings).
 
 # ----------- Output Formatting -----------------------------------------------------------------------------------------------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
-# Default configuration file for AutoSpec v 1.1.0
-# DATE: 05-09-2018
+# Default configuration file for AutoSpec v 1.1.2
+# DATE: 20-09-2018
 
 # ----------- Operating Mode -------------------------------------------------------------------------------------------------------------------------------------------------------------
  
@@ -25,7 +25,7 @@ IMG            = ''                            # name of additional image files 
 
 # ----------- Object Masks ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-USE_WHITE      =  True                         # if AutoSpec should also use the MUSE_WHITE segmentation map to create masks (True or False).
+USE_IMGS       =  True                         # if AutoSpec should also use the segmentation maps created from the images in IMG parameter to create final masks (True or False).
 OBJ_MASK       = 'INTER'                       # object mask from union (UNION) or intersection (INTER) of segmentation maps (string).
 SEG            = ''                            # name of additional segmentation maps files to be used (string or comma seperated list of strings).
 
