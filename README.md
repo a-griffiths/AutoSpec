@@ -100,7 +100,7 @@ The parameter file provides easy user modification to AutoSpec run modes. Each p
 
 **IMG:** list of additional image file names. AutoSpec will used each of the images to produce weighted spectra and derived object and sky masks. This is either a single file name as a string ('g-band.fits') or a list of file names ('g-band.fits', 'r-band.fits').
 
-**USE_WHITE:** tells AutoSpec if you would like to use the white light image and segmentation maps when deriving the object and sky masks.
+**USE_IMGS:** tells AutoSpec if you would like to use your additional images when deriving the object and sky masks. This is best set to false if using a pre-defined segmentation map but want to output spectra weighted by images. If you want AutoSpec to calculate segmentation maps for you from the images then use True here.
 
 **OBJ_MASK:** here we define if you want to use the intersection or the union of the individual segmentation maps to produce an object mask in order to build the initial spectrum. The intersection mask only selects areas where the object overlaps in the combined segmentation maps, whereas union uses the combination. If you choose intersection and it is found to be empty, the code defaults to using the union mask in order to successfully extract a spectrum. 
 
@@ -228,6 +228,15 @@ Copyright (c) 2018, Alex Griffiths
 AutoSpec is licenced under a [BSD 3-Clause License](LICENSE.md)
 
 ## Changelog
+
+**v.1.1.2:** September 20, 2018
+
+* Small fixes over 1.1.1 where apertures were not extracting correctly.
+* Changed USE_WHITE parameter to USE_IMGS parameter for users with existing segmentation maps.
+
+**v.1.1.1:** September 7, 2018 
+
+* Small fix over 1.1.0 where images were not importing properly.
 
 **v.1.1.0:** September 5, 2018 
 
