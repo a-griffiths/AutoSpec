@@ -27,7 +27,7 @@ sns.set_context("paper")
 
 # Software info.
 SOFTWARE = 'AutoSpec'
-VERSION = 'v.1.1.0'
+VERSION = 'v.1.1.2'
 AUTHOR = 'Alex Griffiths'
 
 
